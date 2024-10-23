@@ -6,16 +6,16 @@ import './StylesComponent.css';
 
 const TarjetaProducto = ({ id, image, title, price, weight }) => {
     const navigate = useNavigate();
-    const [isFavorite, setIsFavorite] = useState(false); // Estado para indicar si el producto es favorito
+    const [isFavorite, setIsFavorite] = useState(false);
 
     const handleRedirect = () => {
-        navigate(`/DetalleProducto/${id}`); // Redirige a la página de detalles del producto
+        navigate(`/DetalleProducto/${id}`);
     };
 
     const handleFavoriteToggle = () => {
-        setIsFavorite(!isFavorite); // Cambia el estado de favorito
+        setIsFavorite(!isFavorite);
         const message = !isFavorite ? '¡Producto agregado a favoritos!' : '¡Producto removido de favoritos!';
-        alert(message); // Muestra un mensaje al usuario
+        alert(message);
     };
 
     return (
@@ -33,7 +33,7 @@ const TarjetaProducto = ({ id, image, title, price, weight }) => {
                             style={{
                                 cursor: 'pointer',
                                 marginLeft: '10px',
-                                color: isFavorite ? 'gold' : 'gray', // Cambia el color según el estado
+                                color: isFavorite ? 'gold' : 'gray',
                             }}
                         />
                         <FaArrowCircleRight

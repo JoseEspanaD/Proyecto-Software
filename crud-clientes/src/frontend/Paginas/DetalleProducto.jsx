@@ -5,7 +5,7 @@ import Navbar from '../Componentes/Navbar';
 import NavbarProductos from '../Componentes/NavbarProductos';
 import DescripcionProducto from '../Componentes/DescripcionProducto';
 
-const DetalleProducto = ({ agregarAlCarrito }) => {
+const DetalleProducto = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
@@ -34,7 +34,7 @@ const DetalleProducto = ({ agregarAlCarrito }) => {
         <>
             <Navbar />
             <NavbarProductos onCategoryChange={handleCategoryChange} activeCategory={activeCategory} />
-            <DescripcionProducto product={product} agregarAlCarrito={agregarAlCarrito} />
+            <DescripcionProducto product={product} />
         </>
     );
 };
