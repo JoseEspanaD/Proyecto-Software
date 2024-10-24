@@ -165,6 +165,37 @@ app.post('/api/orders', async (req, res) => {
     }
 });
 
+
+// Ruta para Obtener todos los pedidos
+app.get('/api/orders', async (req, res) => {
+    try {
+      const result = await pool.query('SELECT * FROM "order" ORDER BY date DESC');
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Error al obtener los pedidos:', error);
+      res.status(500).json({ error: 'Error al obtener los pedidos' });
+    }
+  });
+  
+
+  // Ruta paraObtener los detalles de un pedido específico
+  app.get('/api/orders/:id/items', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const result = await pool.query(`
+        SELECT oi.*, p.name as product_name, p.price as unit_price
+        FROM order_item oi
+        JOIN product p ON oi.id_product = p.id_product
+        WHERE oi.id_order = $1
+      `, [id]);
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Error al obtener los detalles del pedido:', error);
+      res.status(500).json({ error: 'Error al obtener los detalles del pedido' });
+    }
+  });
+
+  
 // Ruta para el login de administrador
 app.post('/login', async (req, res) => {
     const { e_mail, password } = req.body;
