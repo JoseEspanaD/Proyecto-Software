@@ -114,6 +114,57 @@ app.post('/Registros.js', async (req, res) => {
     }
 });
 
+// Ruta para manejar la creacion de pedidos
+app.post('/api/orders', async (req, res) => {
+    // Registra los datos recibidos del cliente en la consola
+    console.log('Recibiendo pedido:', req.body);
+    
+    // Desestructura los datos del pedido del cuerpo de la solicitud
+    const { nombre, direccion, municipio, comentarios, fechaPedido, cartItems, total } = req.body;
+  
+    try {
+      // Inicia una transacción en la base de datos
+      console.log('Iniciando transacción');
+      await pool.query('BEGIN');
+  
+      // Inserta el pedido principal en la tabla "order"
+      console.log('Insertando en la tabla order');
+      const orderResult = await pool.query(
+        'INSERT INTO "order" (status, comment, date, total_price) VALUES ($1, $2, $3, $4) RETURNING id_order',
+        ['Pendiente', comentarios, fechaPedido, total]
+      );
+  
+      // Obtiene el ID del pedido recién creado
+      const orderId = orderResult.rows[0].id_order;
+      console.log('Orden creada con ID:', orderId);
+  
+      // Inserta cada artículo del carrito en la tabla order_item
+      console.log('Insertando items del pedido');
+      for (let item of cartItems) {
+        await pool.query(
+          'INSERT INTO order_item (amount, id_order, id_product) VALUES ($1, $2, $3)',
+          [item.quantity, orderId, item.id]
+        );
+      }
+  
+      // Confirma la transacción si todo fue exitoso
+      console.log('Confirmando transacción');
+      await pool.query('COMMIT');
+  
+      // Envía una respuesta exitosa al cliente
+      res.status(200).json({ message: 'Pedido creado con éxito', orderId });
+    } catch (error) {
+      // Si ocurre un error, lo registra en la consola
+      console.error('Error detallado:', error);
+      
+      // Revierte la transacción en caso de error
+      await pool.query('ROLLBACK');
+      
+      // Envía una respuesta de error al cliente
+      res.status(500).json({ error: 'Error al procesar el pedido', details: error.message });
+    }
+});
+
 // Ruta para el login de administrador
 app.post('/login', async (req, res) => {
     const { e_mail, password } = req.body;
