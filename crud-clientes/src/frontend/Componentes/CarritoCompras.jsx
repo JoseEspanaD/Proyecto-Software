@@ -33,7 +33,7 @@ const CarritoCompras = () => {
     <div className="carrito-container">
       <h2 className="mb-4" style={{color: 'white'}}>Carrito de Compras</h2>
       {cartItems.length === 0 ? (
-        <p>Tu carrito está vacío</p>
+        <h4 className="mb-4" style={{color: 'white'}}>Tu carrito esta vacio...</h4>
       ) : (
         <>
           <Table striped bordered hover responsive>

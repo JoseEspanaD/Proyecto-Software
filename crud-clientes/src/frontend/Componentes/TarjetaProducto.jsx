@@ -1,21 +1,42 @@
 // TarjetaProducto.jsx
 import { FaArrowCircleRight, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Modal, Button } from 'react-bootstrap';
 import './StylesComponent.css';
 
 const TarjetaProducto = ({ id, image, title, price, weight }) => {
     const navigate = useNavigate();
     const [isFavorite, setIsFavorite] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+
+    useEffect(() => {
+        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        setIsFavorite(favorites.some(item => item.id === id));
+    }, [id]);
 
     const handleRedirect = () => {
         navigate(`/DetalleProducto/${id}`);
     };
 
     const handleFavoriteToggle = () => {
+        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        let updatedFavorites;
+        if (isFavorite) {
+            updatedFavorites = favorites.filter(item => item.id !== id);
+            setModalMessage('El producto se ha quitado de favoritos');
+        } else {
+            updatedFavorites = [...favorites, { id, image, name: title, price }];
+            setModalMessage('El producto se ha añadido a favoritos');
+        }
+        localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
         setIsFavorite(!isFavorite);
-        const message = !isFavorite ? '¡Producto agregado a favoritos!' : '¡Producto removido de favoritos!';
-        alert(message);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
     };
 
     return (
@@ -45,6 +66,18 @@ const TarjetaProducto = ({ id, image, title, price, weight }) => {
                     </div>
                 </div>
             </div>
+
+            <Modal show={showModal} onHide={handleCloseModal} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Favoritos</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{modalMessage}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleCloseModal}>
+                        Cerrar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
