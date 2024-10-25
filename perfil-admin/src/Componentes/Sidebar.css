@@ -1,0 +1,46 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;  
+    width: 175px;
+    background: linear-gradient(to bottom,#482220,#E10707); 
+    color: white;
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    justify-content: center;    /* Centrar el contenido horizontalmente */
+  align-items: center;   
+  }
+  .sidebar h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    justify-content: center;    /* Centrar el contenido horizontalmente */
+  align-items: center;   
+  }
+  
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar ul li {
+    margin: 15px 0;
+    cursor: pointer;
+  }
+  
+  .sidebar ul li:hover {
+    text-decoration: underline;
+  }
+  .linea-divisoria {
+    border: none;         /* Quita el estilo predeterminado */
+    height: px;          /* Define el grosor de la línea */
+    background-color: #000;  /* Cambia el color de la línea (puedes usar el color que prefieras) */
+    margin: 20px 0;       /* Ajusta el espacio superior e inferior */
+  }
+  
+  

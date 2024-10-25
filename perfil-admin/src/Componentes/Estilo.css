@@ -1,0 +1,14 @@
+.content {
+    margin-left: 250px;  /* Deja un margen a la izquierda igual al ancho del sidebar */
+    width: calc(100% - 250px);  /* Ajusta el ancho para no desbordar la página */
+    position: relative;  /* Asegura que el contenido se posicione correctamente */
+    overflow: auto;  /* Permite el desplazamiento si el contenido excede el tamaño */
+  }
+  
+  .app-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #000000,#482220,#ff0000);
+    padding: 20px;
+    color: white;
+  }
+  
