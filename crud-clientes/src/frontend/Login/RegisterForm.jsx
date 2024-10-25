@@ -6,13 +6,14 @@ const RegisterForm = () => {
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');  
     const [message, setMessage] = useState('');
+    const [phone, setPhone] = useState('');
 
     const handleSubmitt = async (e) => {
         e.preventDefault();
-        const formData = { name, password, e_mail: email, address };
+        const formData = { name, password, e_mail: email, address,phone };
     
         try {
-            const response = await fetch('http://localhost:5000/Registros.js', {
+            const response = await fetch('http://localhost:5000/Registros_usuarios.js', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -65,6 +66,15 @@ const RegisterForm = () => {
                         required
                     />
                 </div>      
+                <div>
+                    <label>Telefono:</label>
+                    <input
+                        type="number"
+                        value={phone}
+                        onChange={(e) => setPhone(parseInt(e.target.value))}  // Cambiado a address
+                        required
+                    />
+                </div>  
                 <button type="submit">Registrarse</button>  {/* Cambiado el texto del botón */}
             </form>
             {message && <p>{message}</p>}

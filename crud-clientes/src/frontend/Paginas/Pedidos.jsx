@@ -1,13 +1,12 @@
-import React from 'react';
 import './StylesPaginas.css';  
 import Navbar from '../Componentes/Navbar';
-import HistorialPedidos from '../Componentes/HistorialPedidos';
 
 function Pedidos() {
   return (
     <>
       <Navbar />
-      <HistorialPedidos />
+      <h2 style={{ color: 'white' }}>Esta es la pagina de pedidosssss</h2>
+
     </>
   );
 }

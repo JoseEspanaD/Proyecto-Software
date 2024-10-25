@@ -90,6 +90,28 @@ app.get('/api/products/:id', async (req, res) => {
         res.status(500).send('Error en el servidor');
     }
 });
+//Ruta para un registro de clientes 
+app.post('/Registros_usuarios.js', async (req, res) => {
+    const { name, password, e_mail, address,phone } = req.body;
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10); // Encriptar la contraseña
+        const query = `
+            INSERT INTO customer ("name", e_mail, status, password, address,phone)
+            VALUES ($1, $2, 'on-line', $3, $4,$5)
+        `;
+        const result = await pool.query(query, [name, e_mail, hashedPassword, address,phone]);
+
+        if (result.rowCount > 0) {
+            res.status(200).send('Registro exitoso!');
+        } else {
+            res.status(500).send('Error al registrar.');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+});
 
 // Ruta para registrar un administrador
 app.post('/Registros.js', async (req, res) => {
@@ -114,88 +136,6 @@ app.post('/Registros.js', async (req, res) => {
     }
 });
 
-// Ruta para manejar la creacion de pedidos
-app.post('/api/orders', async (req, res) => {
-    // Registra los datos recibidos del cliente en la consola
-    console.log('Recibiendo pedido:', req.body);
-    
-    // Desestructura los datos del pedido del cuerpo de la solicitud
-    const { nombre, direccion, municipio, comentarios, fechaPedido, cartItems, total } = req.body;
-  
-    try {
-      // Inicia una transacción en la base de datos
-      console.log('Iniciando transacción');
-      await pool.query('BEGIN');
-  
-      // Inserta el pedido principal en la tabla "order"
-      console.log('Insertando en la tabla order');
-      const orderResult = await pool.query(
-        'INSERT INTO "order" (status, comment, date, total_price) VALUES ($1, $2, $3, $4) RETURNING id_order',
-        ['Pendiente', comentarios, fechaPedido, total]
-      );
-  
-      // Obtiene el ID del pedido recién creado
-      const orderId = orderResult.rows[0].id_order;
-      console.log('Orden creada con ID:', orderId);
-  
-      // Inserta cada artículo del carrito en la tabla order_item
-      console.log('Insertando items del pedido');
-      for (let item of cartItems) {
-        await pool.query(
-          'INSERT INTO order_item (amount, id_order, id_product) VALUES ($1, $2, $3)',
-          [item.quantity, orderId, item.id]
-        );
-      }
-  
-      // Confirma la transacción si todo fue exitoso
-      console.log('Confirmando transacción');
-      await pool.query('COMMIT');
-  
-      // Envía una respuesta exitosa al cliente
-      res.status(200).json({ message: 'Pedido creado con éxito', orderId });
-    } catch (error) {
-      // Si ocurre un error, lo registra en la consola
-      console.error('Error detallado:', error);
-      
-      // Revierte la transacción en caso de error
-      await pool.query('ROLLBACK');
-      
-      // Envía una respuesta de error al cliente
-      res.status(500).json({ error: 'Error al procesar el pedido', details: error.message });
-    }
-});
-
-
-// Ruta para Obtener todos los pedidos
-app.get('/api/orders', async (req, res) => {
-    try {
-      const result = await pool.query('SELECT * FROM "order" ORDER BY date DESC');
-      res.json(result.rows);
-    } catch (error) {
-      console.error('Error al obtener los pedidos:', error);
-      res.status(500).json({ error: 'Error al obtener los pedidos' });
-    }
-  });
-  
-
-  // Ruta paraObtener los detalles de un pedido específico
-  app.get('/api/orders/:id/items', async (req, res) => {
-    const { id } = req.params;
-    try {
-      const result = await pool.query(`
-        SELECT oi.*, p.name as product_name, p.price as unit_price
-        FROM order_item oi
-        JOIN product p ON oi.id_product = p.id_product
-        WHERE oi.id_order = $1
-      `, [id]);
-      res.json(result.rows);
-    } catch (error) {
-      console.error('Error al obtener los detalles del pedido:', error);
-      res.status(500).json({ error: 'Error al obtener los detalles del pedido' });
-    }
-  });
-
-  
 // Ruta para el login de administrador
 app.post('/login', async (req, res) => {
     const { e_mail, password } = req.body;
@@ -203,6 +143,35 @@ app.post('/login', async (req, res) => {
     try {
         const result = await pool.query(
             'SELECT * FROM administrator WHERE e_mail = $1', [e_mail]
+        );
+        const user = result.rows[0];
+
+        if (!user) {
+            return res.status(400).json({ error: 'Usuario no encontrado' });
+        }
+
+        // Verificar la contraseña
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(400).json({ error: 'Contraseña incorrecta' });
+        }
+
+        // Generar un token JWT
+        const token = jwt.sign({ e_mail: user.e_mail }, 'SECRET_KEY', { expiresIn: '1h' });
+
+        res.json({ token });
+    } catch (error) {
+        console.error('Error al consultar la base de datos', error);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+app.post('/login_usuario', async (req, res) => {
+    const { e_mail, password } = req.body;
+
+    try {
+        const result = await pool.query(
+            'SELECT * FROM customer WHERE e_mail = $1', [e_mail]
         );
         const user = result.rows[0];
 

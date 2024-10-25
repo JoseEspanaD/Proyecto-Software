@@ -11,7 +11,7 @@ const Registro = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/login', { e_mail, password });
+      const response = await axios.post('http://localhost:5000/login_usuario', { e_mail, password });
       const token = response.data.token;
       
       // Guardar el token en localStorage
@@ -21,7 +21,7 @@ const Registro = () => {
       alert('Login exitoso');
 
       // Redirigir a la página Principal
-      navigate('/Principal');
+      navigate('/Inicio');
     } catch (err) {
       setError(err.response?.data?.error || 'Error al iniciar sesión');
     }

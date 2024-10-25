@@ -12,5 +12,5 @@ const PrivateRoute = ({ children }) => {
   // Si hay token, renderizar el componente protegido
   return children;
 };
-
+ 
 export default PrivateRoute;
