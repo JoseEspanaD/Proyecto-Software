@@ -18,7 +18,7 @@ const pool = new Pool({
 // Configuración de CORS
 app.use(cors({
     origin: 'http://localhost:3000',   
-    methods: ['POST', 'GET', 'OPTIONS'],
+    methods: ['POST', 'GET', 'PUT','OPTIONS','DELETE'],
     allowedHeaders: ['Content-Type']
 })); 
 
@@ -41,7 +41,8 @@ app.get('/Clientes.js', async ( req,res) => {
 //Pedidos
 app.get('/Enproceso.js', async (req, res) => {
   try {
-    const query = `SELECT * FROM "order" WHERE status ='En proceso'`;
+    const query = `SELECT O.id_order,O.status,O.comment,O.date,O.total_price,C.name 
+    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='En proceso'`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -52,7 +53,8 @@ app.get('/Enproceso.js', async (req, res) => {
 //Entregados
 app.get('/Entregados.js', async (req, res) => {
   try {
-    const query = `SELECT * FROM "order" WHERE status ='Entregados'`;
+    const query = `SELECT O.id_order,O.status,O.comment,O.date,O.total_price,C.name 
+    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='Entregados'`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -63,8 +65,24 @@ app.get('/Entregados.js', async (req, res) => {
 //Sin ver
 app.get('/Sinver.js', async (req, res) => {
   try {
-    const query = `SELECT * FROM "order" WHERE status ='Sin ver'`;
+    const query = `SELECT O.id_order,O.status,O.comment,O.date,O.total_price,C.name 
+    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='Sin ver'`;
     const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+app.get('/Descripcion.js/:id_order', async (req, res) => {
+  const { id_order } = req.params; // obtener el parámetro id_order
+  try {
+    const query = `
+      SELECT I.id_articulo, P.name, P.price, (P.price * I.amount) AS total_price 
+      FROM order_item I 
+      JOIN product P ON P.id_product = I.id_product
+      WHERE I.id_order = $1`; // usar el parámetro en la consulta
+    const result = await pool.query(query, [id_order]);
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -159,6 +177,28 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Error del servidor' });
   }
 });
+//Cambiar el estatus de los productos
+app.put('/UpdateStatus/:id_order', async (req, res) => {
+  const { id_order } = req.params;
+  const { status } = req.body;
+
+  try {
+    const query = `UPDATE "order" SET status = $1 WHERE id_order = $2`;
+    const result = await pool.query(query, [status, id_order]);
+
+    if (result.rowCount > 0) {
+      res.status(200).send('Estatus actualizado correctamente');
+    } else {
+      res.status(404).send('Pedido no encontrado');
+    }
+  } catch (err) {
+    console.error('Error en el servidor:', err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+
+
 
 // Iniciar el servidor
 app.listen(5000, () => {

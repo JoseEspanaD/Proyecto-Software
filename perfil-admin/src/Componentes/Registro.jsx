@@ -44,10 +44,7 @@ const Registro = () => {
           </Form.Group>
           <Button variant="outline-danger" type="submit" className="mt-3">
             Login
-          </Button>
-          <a href="/Register"><Button variant="outline-info"  className="mt-3">
-            New Administrator
-          </Button></a>
+          </Button> 
         </Form>
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>

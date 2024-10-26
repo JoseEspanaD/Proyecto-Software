@@ -20,17 +20,14 @@ function Sidebar() {
   return (
     <div className="sidebar d-flex flex-column p-3" style={{ width: '250px', height: '100vh' }}>
       <img src={logo} alt="Carnespa" className="logo" /> 
-      <h1 className="text-white">CARNESPA</h1>
-      <h3 className="text-white">Inicio</h3>
-      <h4 className="text-white">Acciones</h4>
-
+      <h1 className="text-white">CARNESPA</h1> 
      < hr className="linea-divisoria" />
       <Nav className="flex-column">
         <Nav.Link href="/Principal" className="text-white">Inicio</Nav.Link>
         <Nav.Link onClick={() => handleClick('categoria')} className="text-white">Agregar Categoría</Nav.Link>
         <Nav.Link onClick={() => handleClick('Productos')}  className="text-white">Agregar Productos</Nav.Link>
         <Nav.Link onClick={() => handleClickone('Verpedidos')} className="text-white">Verificar Pedidos</Nav.Link>
-        <Nav.Link onClick={() => handleClicktwo('Clientes')} className="text-success">Clientes Registrados</Nav.Link>
+        <Nav.Link onClick={() => handleClicktwo('Clientes')} className="text-white">Clientes Registrados</Nav.Link>
       </Nav>
     </div>
   );
