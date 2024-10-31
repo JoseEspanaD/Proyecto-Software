@@ -4,13 +4,11 @@ import { Navigate } from 'react-router-dom';
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('authToken');
 
-  // Si no hay token, redirigir al login
   if (!token) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
 
-  // Si hay token, renderizar el componente protegido
   return children;
 };
- 
+
 export default PrivateRoute;

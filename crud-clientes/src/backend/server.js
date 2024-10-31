@@ -14,7 +14,7 @@ const PORT = 5000;
 app.use(cors({
     origin: 'http://localhost:3000',  // Cambia al puerto donde está corriendo tu frontend
     methods: ['POST', 'GET', 'OPTIONS'],
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,6 +27,19 @@ const pool = new Pool({
     password: 'estudio', // reemplaza con tu contraseña
     port: 5432, // puerto por defecto de PostgreSQL
 });
+
+// Middleware para verificar el token
+const verifyToken = (req, res, next) => {
+    const token = req.headers['authorization'];
+    if (!token) return res.status(403).send({ auth: false, message: 'No token provided.' });
+    
+    jwt.verify(token, 'SECRET_KEY', (err, decoded) => {
+        if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+        
+        req.userId = decoded.id;
+        next();
+    });
+};
 
 // Rutas de prueba
 app.get('/', (req, res) => {
@@ -68,7 +81,6 @@ app.get('/api/products', async (req, res) => {
     }
 });
 
-
 // Ruta para obtener un producto por ID
 app.get('/api/products/:id', async (req, res) => {
     const { id } = req.params;
@@ -90,83 +102,91 @@ app.get('/api/products/:id', async (req, res) => {
         res.status(500).send('Error en el servidor');
     }
 });
-//Ruta para un registro de clientes 
-app.post('/Registros_usuarios.js', async (req, res) => {
-    const { name, password, e_mail, address,phone } = req.body;
 
+// Ruta para manejar la creacion de pedidos
+app.post('/api/orders', verifyToken, async (req, res) => {
+    console.log('Recibiendo pedido:', req.body);
+    console.log('Usuario ID:', req.userId); // Agregar este log
+    
+    const { nombre, direccion, municipio, comentarios, fechaPedido, cartItems, total } = req.body;
+  
     try {
-        const hashedPassword = await bcrypt.hash(password, 10); // Encriptar la contraseña
-        const query = `
-            INSERT INTO customer ("name", e_mail, status, password, address,phone)
-            VALUES ($1, $2, 'on-line', $3, $4,$5)
-        `;
-        const result = await pool.query(query, [name, e_mail, hashedPassword, address,phone]);
-
-        if (result.rowCount > 0) {
-            res.status(200).send('Registro exitoso!');
-        } else {
-            res.status(500).send('Error al registrar.');
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error en el servidor');
-    }
-});
-
-// Ruta para registrar un administrador
-app.post('/Registros.js', async (req, res) => {
-    const { name, password, e_mail, address } = req.body;
-
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10); // Encriptar la contraseña
-        const query = `
-            INSERT INTO administrator (name, e_mail, status, password, address)
-            VALUES ($1, $2, 'on-line', $3, $4)
-        `;
-        const result = await pool.query(query, [name, e_mail, hashedPassword, address]);
-
-        if (result.rowCount > 0) {
-            res.status(200).send('Registro exitoso!');
-        } else {
-            res.status(500).send('Error al registrar.');
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error en el servidor');
-    }
-});
-
-// Ruta para el login de administrador
-app.post('/login', async (req, res) => {
-    const { e_mail, password } = req.body;
-
-    try {
-        const result = await pool.query(
-            'SELECT * FROM administrator WHERE e_mail = $1', [e_mail]
+        console.log('Iniciando transacción');
+        await pool.query('BEGIN');
+  
+        console.log('Insertando en la tabla order');
+        const orderResult = await pool.query(
+            'INSERT INTO "order" (status, comment, date, total_price, id_customer) VALUES ($1, $2, $3, $4, $5) RETURNING id_order',
+            ['Pendiente', comentarios, fechaPedido, total, req.userId]
         );
-        const user = result.rows[0];
-
-        if (!user) {
-            return res.status(400).json({ error: 'Usuario no encontrado' });
+  
+        const orderId = orderResult.rows[0].id_order;
+        console.log('Orden creada con ID:', orderId);
+  
+        console.log('Insertando items del pedido');
+        for (let item of cartItems) {
+            await pool.query(
+                'INSERT INTO order_item (amount, id_order, id_product) VALUES ($1, $2, $3)',
+                [item.quantity, orderId, item.id]
+            );
         }
-
-        // Verificar la contraseña
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            return res.status(400).json({ error: 'Contraseña incorrecta' });
-        }
-
-        // Generar un token JWT
-        const token = jwt.sign({ e_mail: user.e_mail }, 'SECRET_KEY', { expiresIn: '1h' });
-
-        res.json({ token });
+  
+        console.log('Confirmando transacción');
+        await pool.query('COMMIT');
+  
+        res.status(200).json({ message: 'Pedido creado con éxito', orderId });
     } catch (error) {
-        console.error('Error al consultar la base de datos', error);
-        res.status(500).json({ error: 'Error del servidor' });
+        console.error('Error detallado:', error);
+        await pool.query('ROLLBACK');
+        res.status(500).json({ error: 'Error al procesar el pedido', details: error.message });
     }
 });
 
-app.post('/login_usuario', async (req, res) => {
+// Ruta para obtener pedidos del usuario correspondiente
+app.get('/api/orders', verifyToken, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM "order" WHERE id_customer = $1 ORDER BY date DESC', [req.userId]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error al obtener los pedidos:', error);
+        res.status(500).json({ error: 'Error al obtener los pedidos' });
+    }
+});
+
+// Añade esta nueva ruta después de las rutas existentes
+app.get('/api/user', verifyToken, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT name, address, municipio FROM customer WHERE id_customer = $1', [req.userId]);
+        if (result.rows.length > 0) {
+            res.json(result.rows[0]);
+        } else {
+            res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+    } catch (error) {
+        console.error('Error al obtener datos del usuario:', error);
+        res.status(500).json({ error: 'Error al obtener datos del usuario' });
+    }
+});
+
+// Ruta paraObtener los detalles de un pedido específico
+app.get('/api/orders/:id/items', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const result = await pool.query(`
+        SELECT oi.*, p.name as product_name, p.price as unit_price
+        FROM order_item oi
+        JOIN product p ON oi.id_product = p.id_product
+        WHERE oi.id_order = $1
+      `, [id]);
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Error al obtener los detalles del pedido:', error);
+      res.status(500).json({ error: 'Error al obtener los detalles del pedido' });
+    }
+});
+
+// Ruta para el login del cliente
+app.post('/login', async (req, res) => {
     const { e_mail, password } = req.body;
 
     try {
@@ -186,12 +206,47 @@ app.post('/login_usuario', async (req, res) => {
         }
 
         // Generar un token JWT
-        const token = jwt.sign({ e_mail: user.e_mail }, 'SECRET_KEY', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id_customer, e_mail: user.e_mail }, 'SECRET_KEY', { expiresIn: '1h' });
 
-        res.json({ token });
+        res.json({ token, userId: user.id_customer });
     } catch (error) {
         console.error('Error al consultar la base de datos', error);
         res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
+// Ruta para registrar un cliente nuevo
+app.post('/register', async (req, res) => {
+    const { name, e_mail, password, address, phone, municipio } = req.body;
+
+    try {
+        // Verificar si el email ya está registrado
+        const emailCheck = await pool.query('SELECT * FROM customer WHERE e_mail = $1', [e_mail]);
+        if (emailCheck.rows.length > 0) {
+            return res.status(400).json({ error: 'El email ya está registrado' });
+        }
+
+        // Encriptar la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insertar el nuevo cliente
+        const query = `
+            INSERT INTO customer (name, e_mail, status, password, address, phone, municipio)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING id_customer
+        `;
+        const values = [name, e_mail, 'active', hashedPassword, address, phone.toString(), municipio];
+        const result = await pool.query(query, values);
+
+        const newUserId = result.rows[0].id_customer;
+
+        // Generar un token JWT para el nuevo usuario
+        const token = jwt.sign({ id: newUserId, e_mail }, 'SECRET_KEY', { expiresIn: '1h' });
+
+        res.status(201).json({ message: 'Cliente registrado con éxito', token, userId: newUserId });
+    } catch (err) {
+        console.error('Error al registrar el cliente:', err);
+        res.status(500).json({ error: 'Error al registrar el cliente', details: err.message });
     }
 });
 

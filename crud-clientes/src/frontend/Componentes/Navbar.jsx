@@ -1,10 +1,19 @@
 import './StylesComponent.css'; 
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaHome, FaBoxOpen, FaClipboardList } from 'react-icons/fa'; // Importa los iconos
 import { TiShoppingCart, TiStarFullOutline } from "react-icons/ti";
 import { NavLink } from 'react-router-dom'; 
 import Logotipo from '../Assets/Logotipo.jpeg';
 
 const Navbar = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        navigate('/login');
+    };
+
     return (
         <nav className="navbar navbar-expand-lg">
             <div className="container-fluid">
@@ -24,6 +33,7 @@ const Navbar = () => {
                         <NavLink className="nav-link text-white" to="/perfil" activeClassName="active"><FaUser className="icon" /> Perfil</NavLink>
                         <NavLink className="nav-link text-white" to="/productos" activeClassName="active"><FaBoxOpen className="icon" /> Productos</NavLink>
                         <NavLink className="nav-link text-white" to="/pedidos" activeClassName="active"><FaClipboardList className="icon" /> Pedidos</NavLink>
+                        <button className="nav-link text-white" onClick={handleLogout}>Cerrar Sesión</button>
                     </div>
                 </div>
 
