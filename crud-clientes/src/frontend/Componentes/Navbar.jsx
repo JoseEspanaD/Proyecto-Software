@@ -10,7 +10,10 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
+        const userId = localStorage.getItem('id_customer'); // Obtener el id del cliente
+        localStorage.removeItem('id_customer');
         localStorage.removeItem('authToken');
+        localStorage.removeItem(`cart_${userId}`); // Limpiar el carrito del usuario
         navigate('/login');
     };
 

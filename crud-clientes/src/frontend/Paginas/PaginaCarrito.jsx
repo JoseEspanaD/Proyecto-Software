@@ -9,15 +9,15 @@ const PaginaCarrito = () => {
   const [showConfirmacion, setShowConfirmacion] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    // Cargar los items del carrito desde localStorage
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const userId = localStorage.getItem('id_customer'); // Obtener el ID del cliente desde localStorage
+    const storedCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
     setCartItems(storedCart);
-    // Calcular el total
     const newTotal = storedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     setTotal(newTotal);
-  }, []);
+  }, [userId]);
 
   const handleProcederPedido = (items, totalCarrito) => {
     if (totalCarrito >= 300) {
@@ -35,10 +35,10 @@ const PaginaCarrito = () => {
       if (response.status === 200) {
         alert('Pedido realizado con éxito');
         // Vaciar el carrito
-        localStorage.removeItem('cart');
-        setCartItems([]);
-        setTotal(0);
-        // Aquí podrías redirigir al usuario a una página de confirmación
+        const userId = localStorage.getItem('id_customer'); // Obtener el ID del cliente
+        localStorage.removeItem(`cart_${userId}`); // Limpiar el carrito del usuario
+        setCartItems([]); // Vaciar el estado del carrito
+        setTotal(0); // Reiniciar el total
       }
     } catch (error) {
       console.error('Error al realizar el pedido:', error);

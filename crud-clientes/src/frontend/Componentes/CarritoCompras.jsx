@@ -6,12 +6,13 @@ import './StylesComponent.css';
 const CarritoCompras = ({ onProcederPedido }) => {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
+  const userId = localStorage.getItem('id_customer');
 
   useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
     setCartItems(cart);
     calculateTotal(cart);
-  }, []);
+  }, [userId]);
 
   const calculateTotal = (items) => {
     const newTotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -23,14 +24,14 @@ const CarritoCompras = ({ onProcederPedido }) => {
       item.id === id ? { ...item, quantity: Math.max(1, newQuantity) } : item
     );
     setCartItems(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(updatedCart));
     calculateTotal(updatedCart);
   };
 
   const handleRemoveItem = (id) => {
     const updatedCart = cartItems.filter(item => item.id !== id);
     setCartItems(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(updatedCart));
     calculateTotal(updatedCart);
   };
 
@@ -40,7 +41,7 @@ const CarritoCompras = ({ onProcederPedido }) => {
       {cartItems.length === 0 ? (
         <h4 className="mb-4" style={{color: 'white'}}>Tu carrito está vacío...</h4>
       ) : (
-        <>
+        <div className="tabla-carrito">
           <Table striped bordered hover responsive>
             <thead>
               <tr>
@@ -98,7 +99,7 @@ const CarritoCompras = ({ onProcederPedido }) => {
           >
             Proceder con el Pedido
           </Button>
-        </>
+        </div>
       )}
     </div>
   );

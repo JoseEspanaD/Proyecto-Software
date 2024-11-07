@@ -18,8 +18,9 @@ const DescripcionProducto = ({ product }) => {
       image: product.image
     };
 
-    // Obtenemos el carrito actual del localStorage
-    const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+    // Obtenemos el carrito actual del localStorage usando el id_customer
+    const userId = localStorage.getItem('id_customer');
+    const currentCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
 
     // Buscamos si el producto ya esta en el carrito
     const existingItemIndex = currentCart.findIndex(item => item.id === cartItem.id);
@@ -32,7 +33,7 @@ const DescripcionProducto = ({ product }) => {
     }
 
     // Actualizamos el carrito en el localStorage
-    localStorage.setItem('cart', JSON.stringify(currentCart));
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(currentCart));
     setShowModal(true);
   }
 

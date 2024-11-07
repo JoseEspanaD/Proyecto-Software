@@ -51,8 +51,11 @@ const ConfirmacionPedido = ({ show, onHide, cartItems, total, onConfirm }) => {
     
     // Procesamos la respuesta y mostramos el mensaje de éxito
     onConfirm(response.data);
-    localStorage.removeItem('cart');
-    onHide();
+    
+    // Limpiar el carrito del usuario usando el id_customer
+    const userId = localStorage.getItem('id_customer'); // Obtener el ID del cliente
+    localStorage.removeItem(`cart_${userId}`); // Limpiar el carrito del usuario
+    onHide(); // Cerrar el modal de confirmación
     alert('El pedido se ha procesado con éxito');
   };
 
