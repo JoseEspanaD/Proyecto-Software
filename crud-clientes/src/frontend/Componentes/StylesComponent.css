@@ -258,3 +258,89 @@
 .boton-agregar-carrito:hover {
     background-color: #0056b3;
 }
+
+/*////////////////////////////////////////////////VENTANA PARA FILTRADO DE PEDIDOS////////////////////////////////////////////////*/
+/* Estilo del modal de filtro */
+.filtro-modal-header {
+    background-color: #ffffff;
+    border: none;
+  }
+  
+  .filtro-modal-body {
+    background: linear-gradient(to bottom, #000000, #333333);
+    color: white;
+  }
+  
+  .filtro-opcion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    background: none;
+    border: none;
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .filtro-opcion:hover {
+    background-color: #444;
+  }
+  
+  .filtro-opcion.selected {
+    color: #1db954;
+  }
+  
+  .check-icon {
+    margin-left: 10px;
+    color: #1db954;
+  }
+  
+  .filtro-texto {
+    flex-grow: 1;
+    text-align: left;
+  }
+  
+/* Estilos para el contenedor de Organizar Pedidos */
+.organizar-pedidos-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px; /* Espacio entre la opción y la tabla */
+  }
+  
+  /* Estilos para Organizar Pedidos */
+  .organizar-pedidos {
+    display: flex;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    font-family: 'Georgia', serif;
+    font-size: 1.2em;
+    padding: 8px 12px; /* Espacio interno para mejorar el área clickeable */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .organizar-pedidos:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Fondo suave al pasar el cursor */
+    color: #e0e0e0; /* Cambio de color del texto */
+  }
+  
+  .organizar-pedidos span {
+    margin-right: 8px;
+  }
+  
+  .organizar-icon {
+    display: flex;
+    align-items: center;
+    color: rgb(43, 192, 242);
+  }
+  
+  
+
+  
+  
+  
+  
+  

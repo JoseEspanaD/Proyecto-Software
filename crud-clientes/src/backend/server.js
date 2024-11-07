@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
 // Ruta para obtener productos, con opción de filtrar por categoría
 app.get('/api/products', async (req, res) => {
     const { category } = req.query; // Obtener la categoría de la query string
-    let query = "SELECT * FROM product WHERE status = '1'";
+    let query = "SELECT * FROM product WHERE status = 'disponible'";
     
     if (category) {
         // Agregar la condición de categoría si se proporciona
@@ -117,7 +117,7 @@ app.post('/api/orders', verifyToken, async (req, res) => {
         console.log('Insertando en la tabla order');
         const orderResult = await pool.query(
             'INSERT INTO "order" (status, comment, date, total_price, id_customer) VALUES ($1, $2, $3, $4, $5) RETURNING id_order',
-            ['Pendiente', comentarios, fechaPedido, total, req.userId]
+            ['sin ver', comentarios, fechaPedido, total, req.userId]
         );
   
         const orderId = orderResult.rows[0].id_order;

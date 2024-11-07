@@ -1,6 +1,9 @@
+// HistorialPedidos.jsx
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal } from 'react-bootstrap';
+import { FaListUl } from "react-icons/fa";
 import axios from 'axios';
+import FiltroPedidos from './FiltroPedidos';
 import './StylesComponent.css';
 
 const HistorialPedidos = () => {
@@ -8,6 +11,9 @@ const HistorialPedidos = () => {
   const [showModal, setShowModal] = useState(false);
   const [pedidoSeleccionado, setPedidoSeleccionado] = useState(null);
   const [detallesPedido, setDetallesPedido] = useState([]);
+  const [showFiltro, setShowFiltro] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
+  const [pedidosOriginales, setPedidosOriginales] = useState([]);
 
   useEffect(() => {
     const fetchPedidos = async () => {
@@ -17,6 +23,7 @@ const HistorialPedidos = () => {
           headers: { 'Authorization': token }
         });
         setPedidos(response.data);
+        setPedidosOriginales(response.data);
       } catch (error) {
         console.error('Error al obtener los pedidos:', error);
       }
@@ -39,15 +46,52 @@ const HistorialPedidos = () => {
     }
   };
 
+  const handleSort = (order) => {
+    let sortedPedidos;
+    if (order === 'sinVer') {
+      sortedPedidos = pedidosOriginales.filter(pedido => pedido.status === 'sin ver');
+    } else if (order === 'pendientes') {
+      sortedPedidos = pedidosOriginales.filter(pedido => pedido.status === 'pendiente');
+    } else if (order === 'enProceso') {
+      sortedPedidos = pedidosOriginales.filter(pedido => pedido.status === 'en proceso');
+    } else if (order === 'fechaAsc') {
+      sortedPedidos = [...pedidosOriginales].sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else if (order === 'fechaDesc') {
+      sortedPedidos = [...pedidosOriginales].sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (order === 'precioAsc') {
+      sortedPedidos = [...pedidosOriginales].sort((a, b) => a.total_price - b.total_price);
+    } else if (order === 'precioDesc') {
+      sortedPedidos = [...pedidosOriginales].sort((a, b) => b.total_price - a.total_price);
+    }
+    
+    if (sortedPedidos.length > 0) {
+      setPedidos(sortedPedidos);
+    } else {
+      setPedidos([]);
+    }
+    
+    setSelectedOption(order);
+    setShowFiltro(false);
+  };
+
   return (
     <div className="historial-pedidos-container">
       <h2 style={{ color: 'white' }}>Historial de Pedidos</h2>
+      <div className="organizar-pedidos-container">
+        <div className="organizar-pedidos" onClick={() => setShowFiltro(true)}>
+          <span>Organizar Pedidos</span>
+          <div className="organizar-icon">
+            <FaListUl />
+          </div>
+        </div>
+      </div>
       <Table striped bordered hover responsive>
         <thead>
           <tr>
             <th>ID Pedido</th>
             <th>Fecha</th>
             <th>Estado</th>
+            <th>Precio Total</th>
             <th>Acción</th>
           </tr>
         </thead>
@@ -57,6 +101,7 @@ const HistorialPedidos = () => {
               <td>{pedido.id_order}</td>
               <td>{new Date(pedido.date).toLocaleDateString()}</td>
               <td>{pedido.status}</td>
+              <td>Q {pedido.total_price}</td>
               <td>
                 <Button variant="info" onClick={() => handleVerDescripcion(pedido)}>
                   Descripción
@@ -66,6 +111,13 @@ const HistorialPedidos = () => {
           ))}
         </tbody>
       </Table>
+
+      <FiltroPedidos
+        show={showFiltro}
+        handleClose={() => setShowFiltro(false)}
+        handleSort={handleSort}
+        selectedOption={selectedOption}
+      />
 
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
         <Modal.Header closeButton>
