@@ -1,8 +1,10 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom'; 
-import Sidebar from './Sidebar';
-import Header from './Header';
-import Footer from './Footer';
+//import Sidebar from './Elementos/Sidebar'; 
+//import Footer from './Elementos/Footer';
+import Sidebar from './Elementos/Sidebar';
+import Footer from './Elementos/Footer';
+import Header from './Elementos/Header';
 import Categorianueva from './Formularios/Categorianueva';
 import Productonuevo from './Formularios/Productonuevo'; 
 import './Estilo.css';
@@ -12,10 +14,10 @@ function Formularios() {
   const formularioActual = location.state?.formulario || '';
     return (
         
-        <div className="app-container"> 
+        <div > 
         <Sidebar />
-        <div className="content p-4">
-        <Header />
+        <div className="content ">
+          <Header /> 
         <Container> 
         {formularioActual === 'categoria' && <Categorianueva />}
         {formularioActual === 'Productos' && <Productonuevo />}

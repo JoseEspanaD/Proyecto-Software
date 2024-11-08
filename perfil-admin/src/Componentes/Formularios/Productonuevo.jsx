@@ -13,7 +13,7 @@ function Productonuevo() {
         const formData = { name, description, weight, price, category,image };
     
         try {
-            const response = await fetch('http://localhost:5000/Nuevoproduct.js', {
+            const response = await fetch('http://localhost:5001/Nuevoproduct.js', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -54,7 +54,7 @@ function Productonuevo() {
             Registro
           </Button> 
         </Form>  
-       
+        
     );
   }
   export default Productonuevo;

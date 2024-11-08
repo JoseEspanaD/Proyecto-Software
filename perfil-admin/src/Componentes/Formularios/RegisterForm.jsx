@@ -1,7 +1,8 @@
-import React, { useState } from 'react';  
-import { Form, Button } from 'react-bootstrap'; 
-function RegisterForm() {
-  const [name, setName] = useState('');
+import React, { useState } from 'react'; 
+import { Form, Button } from 'react-bootstrap';
+
+const RegisterForm = () => {
+    const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');  
@@ -23,11 +24,12 @@ function RegisterForm() {
         } catch (error) {
             setMessage('Error en el registro');
         }
-    };
+    }; 
+
     return (
-     
-       
-        <Form onSubmit={handleSubmitt}>
+        <div className="app-container">
+             
+            <Form onSubmit={handleSubmitt}>
           <h1>Login</h1>
           <Form.Group controlId="formBasicText">
             <Form.Label>Name:</Form.Label>
@@ -47,7 +49,8 @@ function RegisterForm() {
             Registro
           </Button> 
         </Form>  
-       
+        </div>
     );
-  }
-  export default RegisterForm;
+};
+
+export default RegisterForm;

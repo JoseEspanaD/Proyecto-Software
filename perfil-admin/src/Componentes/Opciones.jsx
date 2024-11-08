@@ -1,8 +1,8 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom'; 
-import Sidebar from './Sidebar';
-import Header from './Header';
-import Footer from './Footer';
+import Sidebar from './Elementos/Sidebar';
+import Footer from './Elementos/Footer';
+import Header from './Elementos/Header';
+import { useLocation } from 'react-router-dom';  
 import Inicio from './Opciones/Inicio';
 import Verpedidos from './Opciones/Verpedidos'; 
 import './Estilo.css';
@@ -12,16 +12,16 @@ function Opciones() {
   const opcionesActual = location.state?.opciones || '';
     return (
         
-        <div className="app-container"> 
-        <Sidebar />
-        <div className="content p-4">
-        <Header />
+        <div>  
+          <Sidebar />
+        <div className="content"> 
+          <Header />
         <Container> 
         {opcionesActual === 'Inicio' && <Inicio />}
         {opcionesActual === 'Verpedidos' && <Verpedidos />}
       </Container>
-        </div>
-        <Footer />
+      <Footer />
+        </div> 
       </div>
     );
   }

@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
-import './Estilo.css';
-
+import { Container,Form, Button } from 'react-bootstrap'; 
 const Registro = () => {
   const [e_mail, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +11,7 @@ const Registro = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/login', { e_mail, password });
+      const response = await axios.post('http://localhost:5001/login', { e_mail, password });
       const token = response.data.token;
       
       // Guardar el token en localStorage
@@ -30,10 +28,10 @@ const Registro = () => {
   };
 
   return (
-    <div className="app-container">
-       
+    <Container >
+      <div >
       <Form onSubmit={handleLogin}>
-          <h1>Login</h1>
+          <h1>Login SSS</h1>
           <Form.Group controlId="formBasicText">
             <Form.Label>Email</Form.Label>
             <Form.Control type="email" placeholder="prueba@gmail.com" value={e_mail}
@@ -47,7 +45,8 @@ const Registro = () => {
           </Button> 
         </Form>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
+      </div> 
+    </Container>
   );
 };
 

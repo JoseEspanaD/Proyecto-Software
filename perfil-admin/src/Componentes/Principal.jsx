@@ -1,20 +1,23 @@
-import React from 'react'; 
-import Sidebar from './Sidebar';
-import Footer from './Footer';
-import Header from './Header'; 
+import React from 'react';   
 import Inicio from './Opciones/Inicio'
+import Sidebar from './Elementos/Sidebar';
+import Footer from './Elementos/Footer';
+import Header from './Elementos/Header';
 import { Container, Button } from 'react-bootstrap';
 import './Estilo.css';
 function Principal() {
     return (
-     
-      <div className="app-container">
-        <Sidebar />
-        <div className="content p-4">
+     <div> 
+      <div >
+       <Sidebar />
+        <div className="content "> 
         <Header />
+        <Container>
         <Inicio />
-        </div>
+        </Container>
         <Footer />
+        </div> 
+      </div>
       </div>
        
     );

@@ -17,7 +17,7 @@ const pool = new Pool({
 
 // Configuración de CORS
 app.use(cors({
-    origin: 'http://localhost:3000',   
+    origin: 'http://localhost:3001',   
     methods: ['POST', 'GET', 'PUT','OPTIONS','DELETE'],
     allowedHeaders: ['Content-Type']
 })); 
@@ -30,6 +30,17 @@ const SECRET_KEY = process.env.SECRET_KEY;  // Obtener la clave secreta de las v
 app.get('/Clientes.js', async ( req,res) => {
   try {
     const query = `SELECT * FROM customer`;
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+app.get('/Administradores.js', async ( req,res) => {
+  try {
+    const query = `SELECT * FROM administrator`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -78,7 +89,7 @@ app.get('/Descripcion.js/:id_order', async (req, res) => {
   const { id_order } = req.params; // obtener el parámetro id_order
   try {
     const query = `
-      SELECT I.id_articulo, P.name, P.price, (P.price * I.amount) AS total_price 
+      SELECT I.id_item, P.name, P.price, (P.price * I.amount) AS total_price 
       FROM order_item I 
       JOIN product P ON P.id_product = I.id_product
       WHERE I.id_order = $1`; // usar el parámetro en la consulta
@@ -92,15 +103,15 @@ app.get('/Descripcion.js/:id_order', async (req, res) => {
 
 // Ruta para registrar un nuevo administrador
 app.post('/Registros.js', async (req, res) => {
-  const { name, password, e_mail, address } = req.body;
+  const { name, password, e_mail, address,phone,municipio } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10); // Encriptar la contraseña
     const query = `
-      INSERT INTO administrator (name, e_mail, status, password, address)
-      VALUES ($1, $2, 'on-line', $3, $4)
+      INSERT INTO administrator (name, e_mail, status, password, address,phone,municipio)
+      VALUES ($1, $2, 'on-line', $3, $4,$5,$6)
     `;
-    const result = await pool.query(query, [name, e_mail, hashedPassword, address]);
+    const result = await pool.query(query, [name, e_mail, hashedPassword, address,phone,municipio]);
 
     if (result.rowCount > 0) {
       res.status(200).send('Registro exitoso!');
@@ -119,7 +130,7 @@ app.post('/Nuevoproduct.js', async (req, res) => {
   try { 
     const query = `
       INSERT INTO product (name, description, weight, price, status, category, image)
-      VALUES ($1, $2, $3, $4, 'Listo', $5, $6)
+      VALUES ($1, $2, $3, $4, '1', $5, $6)
       `;
 const result = await pool.query(query, [name, description, weight, price, category, image]);
 
@@ -129,6 +140,8 @@ const result = await pool.query(query, [name, description, weight, price, catego
     } else {
       res.status(500).send('Error al registrar.');
     }
+    console.log(req.body); // Agregar esta línea
+
   } catch (err) {
     console.error(err);
     res.status(500).send('Error en el servidor');
@@ -177,19 +190,81 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Error del servidor' });
   }
 });
-//Cambiar el estatus de los productos
-app.put('/UpdateStatus/:id_order', async (req, res) => {
-  const { id_order } = req.params;
-  const { status } = req.body;
+// Ruta para obtener un producto por ID
+app.get('/api/products/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+      return res.status(400).json({ message: 'ID del producto es requerido' });
+  }
 
   try {
-    const query = `UPDATE "order" SET status = $1 WHERE id_order = $2`;
-    const result = await pool.query(query, [status, id_order]);
+      const result = await pool.query('SELECT * FROM product WHERE id_product = $1', [parseInt(id, 10)]);
+      
+      if (result.rows.length === 0) {
+          return res.status(404).json({ message: 'Producto no encontrado' });
+      }
+
+      res.json(result.rows[0]);
+  } catch (err) {
+      console.error('Error en la consulta:', err.message);
+      res.status(500).send('Error en el servidor');
+  }
+});
+// Ruta para obtener productos, con opción de filtrar por categoría
+app.get('/api/products', async (req, res) => {
+  const { category } = req.query; // Obtener la categoría de la query string
+  let query = "SELECT * FROM product WHERE status = '1'";
+  
+  if (category) {
+      // Agregar la condición de categoría si se proporciona
+      switch (category) {
+          case 'chorizosylonganizas':
+              query += " AND category = 'cl'";
+              break;
+          case 'madurados':
+              query += " AND category = 'm'";
+              break;
+          case 'embutidos':
+              query += " AND category = 'e'";
+              break;
+          case 'carnes':
+              query += " AND category = 'c'";
+              break;
+          default:
+              return res.status(400).send('Categoría no válida'); // Manejo de categoría no válida
+      }
+  }
+
+  try {
+      const result = await pool.query(query);
+      console.log('Resultado:', result.rows); // Log del resultado
+      res.json(result.rows);
+  } catch (err) {
+      console.error('Error en la consulta:', err.message); // Log del error
+      res.status(500).send('Error en el servidor');
+  }
+});
+ 
+
+//Update los productos
+// Cambiar los detalles de un producto
+app.put('/UpdateProduct/:id_product', async (req, res) => {
+  const { id_product } = req.params;
+  const { name, description, weight, price, category, image, status } = req.body;
+
+  try {
+    const query = `
+      UPDATE product 
+      SET name = $1, description = $2, weight = $3, price = $4, category = $5, image = $6, status = $7 
+      WHERE id_product = $8
+    `;
+    const result = await pool.query(query, [name, description, weight, price, category, image, status, id_product]);
 
     if (result.rowCount > 0) {
-      res.status(200).send('Estatus actualizado correctamente');
+      res.status(200).send('Producto actualizado correctamente');
     } else {
-      res.status(404).send('Pedido no encontrado');
+      res.status(404).send('Producto no encontrado');
     }
   } catch (err) {
     console.error('Error en el servidor:', err);
@@ -201,6 +276,6 @@ app.put('/UpdateStatus/:id_order', async (req, res) => {
 
 
 // Iniciar el servidor
-app.listen(5000, () => {
-  console.log('Servidor corriendo en puerto 5000');
+app.listen(5001, () => {
+  console.log('Servidor corriendo en puerto 5001');
 });

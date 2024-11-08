@@ -7,7 +7,7 @@ function Descripcion({ nombreCliente, fechaPedido,id_order }) {
 
   useEffect(() => {
     if (id_order) {
-      axios.get(`http://localhost:5000/Descripcion.js/${id_order}`)
+      axios.get(`http://localhost:5001/Descripcion.js/${id_order}`)
         .then(response => {
           setDescripcion(response.data);
         })
@@ -46,8 +46,8 @@ function Descripcion({ nombreCliente, fechaPedido,id_order }) {
         </thead>
         <tbody>
           {descripcion.map((descripciones) => (
-            <tr key={descripciones.id_articulo}>
-              <td>{descripciones.id_articulo}</td>
+            <tr key={descripciones.id_item}>
+              <td>{descripciones.id_item}</td>
               <td>{descripciones.name}</td>
               <td>{descripciones.price}</td>  
               <td>{descripciones.total_price}</td> 
