@@ -8,20 +8,31 @@ const DescripcionProducto = ({ product }) => {
   const [weight, setWeight] = useState(product.weight || '');
   const [price, setPrice] = useState(product.price || '');   
   const [category, setCategory] = useState(product.category || '');
-  const [image, setImage] = useState(product.image || ''); 
-  const [status, setStatus] = useState(product.status || ''); // Agregar el estado
+  const [image, setImage] = useState(null); // Cambiado a null para el archivo
+  const [status, setStatus] = useState(product.status || '');
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]); // Guarda el archivo seleccionado
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = { name, description, weight, price, category, image, status };
-    
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('weight', weight);
+    formData.append('price', price);
+    formData.append('category', category);
+    formData.append('status', status);
+    if (image) formData.append('image', image);
+
     try {
       const response = await fetch(`http://localhost:5001/UpdateProduct/${product.id_product}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: formData,
       });
-    
+
       if (response.ok) {
         alert('Producto actualizado correctamente');
       } else {
@@ -31,12 +42,13 @@ const DescripcionProducto = ({ product }) => {
       alert('Error en el servidor');
     }
   };
-  
+
   return (
     <div className="detalle-producto-container">
       <div className="detalle-producto-img">
-        <img src={product.image} alt={product.name} className="producto-imagen" />
+        <img src={`http://localhost:5001/uploads/${product.image}`} alt={product.name} className="producto-imagen" />
       </div>
+
       <div className="detalle-producto-info"> 
         <div className="cantidad-selector mb-3"> 
           <Form onSubmit={handleSubmit}>
@@ -62,9 +74,10 @@ const DescripcionProducto = ({ product }) => {
               <Form.Control type="text" placeholder="Categoría" value={category}
                 onChange={(e) => setCategory(e.target.value)} /> 
               
-              <Form.Label>Imagen (URL):</Form.Label>
-              <Form.Control type="text" placeholder="URL" value={image}
-                onChange={(e) => setImage(e.target.value)} /> 
+              <Form.Group controlId="formFile">
+          <Form.Label>Subir Imagen:</Form.Label>
+          <Form.Control type="file" onChange={handleImageChange} />
+        </Form.Group> 
               
               <Form.Label>Estatus:</Form.Label>
               <Form.Control type="text" placeholder="Estatus" value={status}

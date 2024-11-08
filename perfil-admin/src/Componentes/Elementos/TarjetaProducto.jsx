@@ -1,9 +1,9 @@
-// TarjetaProducto.jsx
 import './Header.css'; 
 import { FaArrowCircleRight, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap'; 
+
 const TarjetaProducto = ({ id, image, title, price, weight }) => {
     const navigate = useNavigate();
     const [isFavorite, setIsFavorite] = useState(false);
@@ -41,7 +41,7 @@ const TarjetaProducto = ({ id, image, title, price, weight }) => {
     return (
         <div className="col">
             <div className="card product-card">
-                <img src={image} className="card-img-top" alt={title} />
+                <img src={`http://localhost:5001/uploads/${image}`} className="card-img-top" alt={title} />
                 <div className="card-body">
                     <h5 className="card-title">{title}</h5>
                     <p className="card-text">Precio: {price}</p>

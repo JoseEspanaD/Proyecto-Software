@@ -1,6 +1,8 @@
 require('dotenv').config();  // Cargar las variables de entorno
 const express = require('express');
 const bcrypt = require('bcrypt');
+const path = require('path');
+const multer = require('multer');
 const cors = require('cors');
 const { Pool } = require('pg');
 const bodyParser = require('body-parser');
@@ -123,30 +125,43 @@ app.post('/Registros.js', async (req, res) => {
     res.status(500).send('Error en el servidor');
   }
 });
-// Ruta para Nuevoproduct un nuevo administrador
-app.post('/Nuevoproduct.js', async (req, res) => {
-  const { name, description, weight, price,category,image } = req.body;
 
-  try { 
+
+// Configuración de multer para guardar imágenes
+const storage = multer.diskStorage({
+  destination: './uploads', // Carpeta donde se almacenarán las imágenes
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Renombrar el archivo
+  },
+});
+const upload = multer({ storage: storage });
+
+// Ruta para agregar un nuevo producto con imagen
+app.post('/Nuevoproduct', upload.single('image'), async (req, res) => {
+  const { name, description, weight, price, category } = req.body;
+  const image = req.file ? req.file.filename : null; // Nombre del archivo guardado
+
+  try {
     const query = `
       INSERT INTO product (name, description, weight, price, status, category, image)
       VALUES ($1, $2, $3, $4, '1', $5, $6)
-      `;
-const result = await pool.query(query, [name, description, weight, price, category, image]);
-
+    `;
+    const result = await pool.query(query, [name, description, weight, price, category, image]);
 
     if (result.rowCount > 0) {
       res.status(200).send('Registro exitoso!');
     } else {
       res.status(500).send('Error al registrar.');
     }
-    console.log(req.body); // Agregar esta línea
-
   } catch (err) {
     console.error(err);
     res.status(500).send('Error en el servidor');
   }
 });
+
+// Servir archivos de la carpeta 'uploads' de forma pública
+app.use('/uploads', express.static('uploads'));
+
 //Ruta para la tabla de pedidos dependiendo de su estado
 app.get('/pedidos', (req, res) => {
   const estado = req.query.estado;
@@ -237,8 +252,7 @@ app.get('/api/products', async (req, res) => {
   }
 
   try {
-      const result = await pool.query(query);
-      console.log('Resultado:', result.rows); // Log del resultado
+      const result = await pool.query(query); 
       res.json(result.rows);
   } catch (err) {
       console.error('Error en la consulta:', err.message); // Log del error
@@ -249,25 +263,23 @@ app.get('/api/products', async (req, res) => {
 
 //Update los productos
 // Cambiar los detalles de un producto
-app.put('/UpdateProduct/:id_product', async (req, res) => {
-  const { id_product } = req.params;
-  const { name, description, weight, price, category, image, status } = req.body;
+
+app.put('/UpdateProduct/:id', upload.single('image'), async (req, res) => {
+  const { id } = req.params;
+  const { name, description, weight, price, category, status } = req.body;
+  const imagePath = req.file ? req.file.filename : null;
 
   try {
     const query = `
-      UPDATE product 
-      SET name = $1, description = $2, weight = $3, price = $4, category = $5, image = $6, status = $7 
+      UPDATE product
+      SET name = $1, description = $2, weight = $3, price = $4, category = $5, status = $6, image = $7
       WHERE id_product = $8
     `;
-    const result = await pool.query(query, [name, description, weight, price, category, image, status, id_product]);
+    await pool.query(query, [name, description, weight, price, category, status, imagePath, id]);
 
-    if (result.rowCount > 0) {
-      res.status(200).send('Producto actualizado correctamente');
-    } else {
-      res.status(404).send('Producto no encontrado');
-    }
+    res.status(200).json({ message: 'Producto actualizado correctamente' });
   } catch (err) {
-    console.error('Error en el servidor:', err);
+    console.error('Error en la consulta:', err.message);
     res.status(500).send('Error en el servidor');
   }
 });
