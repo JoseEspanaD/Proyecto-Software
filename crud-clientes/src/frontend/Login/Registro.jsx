@@ -14,8 +14,10 @@ const Registro = () => {
     try {
       const response = await axios.post('http://localhost:5000/login', { e_mail, password });
       const token = response.data.token;
-      
+      const userId = response.data.userId;
+
       localStorage.setItem('authToken', token);
+      localStorage.setItem('id_customer', userId);
 
       setError('');
       alert('Login exitoso');

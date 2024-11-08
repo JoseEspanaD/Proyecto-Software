@@ -9,14 +9,16 @@ const ListaFavoritos = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const userId = localStorage.getItem('id_customer');
+    const favorites = JSON.parse(localStorage.getItem(`favorites_${userId}`)) || [];
     setFavoriteItems(favorites);
   }, []);
 
   const handleRemoveItem = (id) => {
     const updatedFavorites = favoriteItems.filter(item => item.id !== id);
     setFavoriteItems(updatedFavorites);
-    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    const userId = localStorage.getItem('id_customer');
+    localStorage.setItem(`favorites_${userId}`, JSON.stringify(updatedFavorites));
   };
 
   const handleViewDetail = (id) => {
@@ -45,7 +47,7 @@ const ListaFavoritos = () => {
                   <img src={item.image} alt={item.name} style={{width: '50px', marginRight: '10px'}} />
                 </td>
                 <td>{item.name}</td>
-                <td>Q{item.price}</td>
+                <td>{item.price}</td>
                 <td>
                   <Button variant="info" onClick={() => handleViewDetail(item.id)} className="me-2">
                     <FaEye />

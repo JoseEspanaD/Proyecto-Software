@@ -12,7 +12,8 @@ const TarjetaProducto = ({ id, image, title, price, weight }) => {
     const [modalMessage, setModalMessage] = useState('');
 
     useEffect(() => {
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        const userId = localStorage.getItem('id_customer');
+        const favorites = JSON.parse(localStorage.getItem(`favorites_${userId}`)) || [];
         setIsFavorite(favorites.some(item => item.id === id));
     }, [id]);
 
@@ -21,8 +22,10 @@ const TarjetaProducto = ({ id, image, title, price, weight }) => {
     };
 
     const handleFavoriteToggle = () => {
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        const userId = localStorage.getItem('id_customer');
+        const favorites = JSON.parse(localStorage.getItem(`favorites_${userId}`)) || [];
         let updatedFavorites;
+
         if (isFavorite) {
             updatedFavorites = favorites.filter(item => item.id !== id);
             setModalMessage('El producto se ha quitado de favoritos');
@@ -30,7 +33,8 @@ const TarjetaProducto = ({ id, image, title, price, weight }) => {
             updatedFavorites = [...favorites, { id, image, name: title, price }];
             setModalMessage('El producto se ha añadido a favoritos');
         }
-        localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+
+        localStorage.setItem(`favorites_${userId}`, JSON.stringify(updatedFavorites));
         setIsFavorite(!isFavorite);
         setShowModal(true);
     };
