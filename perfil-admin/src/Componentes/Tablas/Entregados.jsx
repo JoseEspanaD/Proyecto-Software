@@ -7,7 +7,7 @@ function Enproceso() {
   const [entregado, setEntregado] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/Entregados.js')  // Cambiado a .get()
+    axios.get('http://localhost:5001/Entregados.js')  // Cambiado a .get()
       .then(response => {
         setEntregado(response.data);
       })
@@ -19,7 +19,7 @@ function Enproceso() {
   const handleStatusChange = async (id_order, newStatus) => {
     console.log(`Cambiando el estatus del pedido ${id_order} a ${newStatus}`); // Agrega este log
     try {
-      await axios.put(`http://localhost:5000/UpdateStatus/${id_order}`, { status: newStatus });
+      await axios.put(`http://localhost:5001/UpdateStatus/${id_order}`, { status: newStatus });
       setEntregado(entregado.map(order => 
         order.id_order === id_order ? { ...order, status: newStatus } : order
       ));

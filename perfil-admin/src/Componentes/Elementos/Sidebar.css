@@ -1,14 +1,16 @@
 .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;  
-    width: 175px;
-    background: linear-gradient(to bottom,#482220,#E10707); 
-    color: white;
-    padding: 15px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 175px; /* Asegura que el ancho sea constante */
+  background: linear-gradient(to bottom, #482220, #E10707);
+  color: white;
+  padding: 15px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  margin: 0; /* Elimina cualquier margen */
+}
+
   
   .sidebar h2 {
     font-size: 1.5rem;

@@ -7,7 +7,7 @@ function Enproceso() {
   const [enproceso, setEnproceso] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/Enproceso.js')
+    axios.get('http://localhost:5001/Enproceso.js')
       .then(response => {
         setEnproceso(response.data);
       })
@@ -18,7 +18,7 @@ function Enproceso() {
 
   const handleStatusChange = async (id_order, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/UpdateStatus/${id_order}`, { status: newStatus });
+      await axios.put(`http://localhost:5001/UpdateStatus/${id_order}`, { status: newStatus });
       setEnproceso(enproceso.map(order => 
         order.id_order === id_order ? { ...order, status: newStatus } : order
       ));

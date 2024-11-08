@@ -1,6 +1,6 @@
 import React from 'react';
 import { Nav } from 'react-bootstrap';
-import logo from '../Assets/logo.jpeg';
+import logo from '../../Assets/logo.jpeg';
 import { useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 
@@ -17,8 +17,11 @@ function Sidebar() {
   const handleClickone = (opciones) => {
     navigate('/Opciones', { state: { opciones } }); 
   };
+  const handleClickthree = () => {
+    navigate('/Productosdis' ); 
+  }; 
   return (
-    <div className="sidebar d-flex flex-column p-3" style={{ width: '250px', height: '100vh' }}>
+    <div className="sidebar d-flex flex-column p-2" style={{ width: '250px', height: '100vh' }}>
       <img src={logo} alt="Carnespa" className="logo" /> 
       <h1 className="text-white">CARNESPA</h1> 
      < hr className="linea-divisoria" />
@@ -28,6 +31,8 @@ function Sidebar() {
         <Nav.Link onClick={() => handleClick('Productos')}  className="text-white">Agregar Productos</Nav.Link>
         <Nav.Link onClick={() => handleClickone('Verpedidos')} className="text-white">Verificar Pedidos</Nav.Link>
         <Nav.Link onClick={() => handleClicktwo('Clientes')} className="text-white">Clientes Registrados</Nav.Link>
+        <Nav.Link onClick={() => handleClickthree()} className="text-white">Productos Disponibles</Nav.Link>
+        <Nav.Link onClick={() => handleClicktwo('Admin')} className="text-white">Administradores</Nav.Link>
       </Nav>
     </div>
   );

@@ -5,7 +5,7 @@ function Clientestabla() {
   const [clientes, setClientes] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/Clientes.js')  // Cambiado a .get()
+    axios.get('http://localhost:5001/Clientes.js')  // Cambiado a .get()
       .then(response => {
         setClientes(response.data);
       })
@@ -28,7 +28,8 @@ function Clientestabla() {
           <th>Correo electronico</th>
           <th>Status</th>
           <th>Telefono</th>
-          <th>Direccion</th>
+          <th>Direccion</th> 
+          <th>Municipio</th> 
         </tr>
       </thead>
       <tbody> 
@@ -40,6 +41,7 @@ function Clientestabla() {
               <td>{cliente.status}</td>
               <td>{cliente.address}</td>
               <td>{cliente.phone}</td>
+              <td>{cliente.municipio}</td>
             </tr>
           ))} 
          

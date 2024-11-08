@@ -12,7 +12,7 @@ function Categorianueva() {
         const formData = { name, password, e_mail: email, address };
     
         try {
-            const response = await fetch('http://localhost:5000/Registros.js', {
+            const response = await fetch('http://localhost:5001/Registros.js', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
