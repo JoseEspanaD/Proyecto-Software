@@ -37,6 +37,7 @@ const CarritoCompras = ({ onProcederPedido }) => {
 
   return (
     <div className="carrito-container">
+      <br />
       <h2 className="mb-4" style={{color: 'white'}}>Carrito de Compras</h2>
       {cartItems.length === 0 ? (
         <h4 className="mb-4" style={{color: 'white'}}>Tu carrito está vacío...</h4>

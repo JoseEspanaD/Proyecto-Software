@@ -36,15 +36,22 @@
     align-items: center;
 }
 
-.navbar-icons {
+ /* Estilo para la opcion activa de compra y favorito */
+.navbar-icons .icons-link {
+    color: #fff !important; /* Color del texto blanco */
     display: flex;
-    gap: 10px; /* Espacio entre los íconos de carrito y favoritos */
-    margin-right: 40px;
+    align-items: center;
+    padding: 2px;
 }
 
-.navbar-icons .nav-link .icon {
-    font-size: 30px;
-    color: #fff;
+/* Estilo para la opción activa */
+.navbar-icons .icons-link.active {
+    color: #229954 !important; /* Cambia a verde si está activa */
+    font-weight: bold;
+}
+
+.navbar-icons .icon {
+    font-size: 30px; /* Aumenta el tamaño de los íconos */
 }
 
 .navbar-toggler {
@@ -102,7 +109,7 @@
 }
 
 .navbar-toggler-icon {
-    color: #fff; /* Cambia el color del icono de menú */
+    color: #ffffff; /* Cambia el color del icono de menú */
 }
 
 /* /////////////////////////////////////////// CARTAS DE PRODUCTOS //////////////////////////////////////////////*/
@@ -269,6 +276,11 @@
     padding: 0 20px;
 }
 
+/*////////////////////////////////////////////// Tabla Favoritos //////////////////////////////////////////////////////*/
+.tabla-favoritos {
+    padding: 0 20px;
+}
+
 /*////////////////////////////////////////////////VENTANA PARA FILTRADO DE PEDIDOS////////////////////////////////////////////////*/
 /* Estilo del modal de filtro */
 .filtro-modal-header {
@@ -347,6 +359,38 @@
     color: rgb(43, 192, 242);
   }
   
+  /*/////////////////////////////// PERFIL DE USUARIO /////////////////////////////////*/
+  .user-profile {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+}
+
+.profile-icon {
+    font-size: 50px;
+    margin-right: 10px;
+}
+
+.profile-info {
+    margin: 10px 0;
+}
+
+.profile-info label {
+    font-weight: bold;
+}
+
+.profile-info input {
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
   
 
   

@@ -76,6 +76,7 @@ const HistorialPedidos = () => {
 
   return (
     <div className="historial-pedidos-container">
+      <br />
       <h2 style={{ color: 'white' }}>Historial de Pedidos</h2>
       <div className="organizar-pedidos-container">
         <div className="organizar-pedidos" onClick={() => setShowFiltro(true)}>

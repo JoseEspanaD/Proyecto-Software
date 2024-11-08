@@ -13,11 +13,12 @@ const PORT = 5000;
 // Middleware
 app.use(cors({
     origin: 'http://localhost:3000',  // Cambia al puerto donde está corriendo tu frontend
-    methods: ['POST', 'GET', 'OPTIONS'],
+    methods: ['POST', 'GET', 'OPTIONS', 'PUT'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 
 // Conexión a la base de datos de PostgreSQL
 const pool = new Pool({
@@ -156,7 +157,7 @@ app.get('/api/orders', verifyToken, async (req, res) => {
 // Añade esta nueva ruta después de las rutas existentes
 app.get('/api/user', verifyToken, async (req, res) => {
     try {
-        const result = await pool.query('SELECT name, address, municipio FROM customer WHERE id_customer = $1', [req.userId]);
+        const result = await pool.query('SELECT name, e_mail, address, phone, municipio FROM customer WHERE id_customer = $1', [req.userId]);
         if (result.rows.length > 0) {
             res.json(result.rows[0]);
         } else {
@@ -182,6 +183,21 @@ app.get('/api/orders/:id/items', async (req, res) => {
     } catch (error) {
       console.error('Error al obtener los detalles del pedido:', error);
       res.status(500).json({ error: 'Error al obtener los detalles del pedido' });
+    }
+});
+
+// Ruta para actualizar los datos del usuario
+app.put('/api/user', verifyToken, async (req, res) => {
+    const { name, e_mail, address, phone, municipio } = req.body;
+    try {
+        await pool.query(
+            'UPDATE customer SET name = $1, e_mail = $2, address = $3, phone = $4, municipio = $5 WHERE id_customer = $6',
+            [name, e_mail, address, phone, municipio, req.userId]
+        );
+        res.status(200).json({ message: 'Datos actualizados con éxito' });
+    } catch (error) {
+        console.error('Error al actualizar los datos del usuario:', error);
+        res.status(500).json({ error: 'Error al actualizar los datos del usuario' });
     }
 });
 

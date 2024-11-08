@@ -30,7 +30,7 @@ const Navbar = () => {
                 </button>
 
                 {/* Opciones centradas */}
-                <div className="collapse navbar-collapse justify-content-center" id="navbarNavAltMarkup">
+                <div className="collapse navbar-collapse justify-content-center">
                     <div className="navbar-nav">
                         <NavLink className="nav-link text-white" to="/" activeClassName="active"><FaHome className="icon" /> Inicio</NavLink>
                         <NavLink className="nav-link text-white" to="/perfil" activeClassName="active"><FaUser className="icon" /> Perfil</NavLink>
@@ -42,8 +42,8 @@ const Navbar = () => {
 
                 {/* Íconos de carrito y favoritos en la parte derecha */}
                 <div className="navbar-icons">
-                    <NavLink className="nav-link text-white" to="/carrito"><TiShoppingCart className="icon" /></NavLink>
-                    <NavLink className="nav-link text-white" to="/favoritos"><TiStarFullOutline className="icon" /></NavLink>
+                    <NavLink className="icons-link text-white" to="/carrito" activeClassName="active"><TiShoppingCart className="icon" /></NavLink>
+                    <NavLink className="icons-link text-white" to="/favoritos" activeClassName="active"><TiStarFullOutline className="icon" /></NavLink>
                 </div>
             </div>
         </nav>
