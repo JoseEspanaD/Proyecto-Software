@@ -8,11 +8,15 @@ const DescripcionProducto = ({ product }) => {
   const [weight, setWeight] = useState(product.weight || '');
   const [price, setPrice] = useState(product.price || '');   
   const [category, setCategory] = useState(product.category || '');
-  const [image, setImage] = useState(null); // Cambiado a null para el archivo
   const [status, setStatus] = useState(product.status || '');
+  const [image, setImage] = useState(null); // Nueva imagen si se selecciona
+  const [imagePreview, setImagePreview] = useState(`http://localhost:5001/uploads/${product.image}`); // URL de la imagen existente
+  const [changeImage, setChangeImage] = useState(false); // Controla si se muestra el campo para cambiar la imagen
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]); // Guarda el archivo seleccionado
+    const file = e.target.files[0];
+    setImage(file); // Guarda el archivo seleccionado como nueva imagen
+    setImagePreview(URL.createObjectURL(file)); // Muestra la nueva imagen como preview
   };
 
   const handleSubmit = async (e) => {
@@ -25,7 +29,11 @@ const DescripcionProducto = ({ product }) => {
     formData.append('price', price);
     formData.append('category', category);
     formData.append('status', status);
-    if (image) formData.append('image', image);
+    
+    // Solo agrega la imagen si el usuario seleccionó "Cambiar imagen" y hay una imagen nueva
+    if (changeImage && image) {
+      formData.append('image', image);
+    }
 
     try {
       const response = await fetch(`http://localhost:5001/UpdateProduct/${product.id_product}`, {
@@ -46,7 +54,8 @@ const DescripcionProducto = ({ product }) => {
   return (
     <div className="detalle-producto-container">
       <div className="detalle-producto-img">
-        <img src={`http://localhost:5001/uploads/${product.image}`} alt={product.name} className="producto-imagen" />
+        {/* Muestra la imagen previa o la nueva seleccionada */}
+        <img src={imagePreview} alt={product.name} className="producto-imagen" />
       </div>
 
       <div className="detalle-producto-info"> 
@@ -74,14 +83,27 @@ const DescripcionProducto = ({ product }) => {
               <Form.Control type="text" placeholder="Categoría" value={category}
                 onChange={(e) => setCategory(e.target.value)} /> 
               
-              <Form.Group controlId="formFile">
-          <Form.Label>Subir Imagen:</Form.Label>
-          <Form.Control type="file" onChange={handleImageChange} />
-        </Form.Group> 
-              
               <Form.Label>Estatus:</Form.Label>
               <Form.Control type="text" placeholder="Estatus" value={status}
                 onChange={(e) => setStatus(e.target.value)} /> 
+
+              <Form.Label>¿Quieres cambiar la imagen?</Form.Label>
+              <Form.Select 
+                aria-label="Seleccionar si cambiar imagen"
+                value={changeImage ? "si" : "no"} 
+                onChange={(e) => setChangeImage(e.target.value === "si")}
+              >
+                <option value="no">No</option>
+                <option value="si">Sí</option>
+              </Form.Select>
+
+              {/* Campo para subir imagen, solo se muestra si el usuario elige cambiar la imagen */}
+              {changeImage && (
+                <>
+                  <Form.Label>Subir Imagen:</Form.Label>
+                  <Form.Control type="file" onChange={handleImageChange} />
+                </>
+              )}
             </Form.Group>
             <Button variant="outline-danger" type="submit" className="mt-3">
               Actualizar Producto

@@ -1,6 +1,25 @@
-import './Header.css'; 
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
 const NavbarProductos = ({ onCategoryChange, activeCategory }) => {
-    const categories = ['Todos', 'Madurados', 'Chorizos y Longanizas', 'Embutidos', 'Carnes'];
+    const [categories, setCategories] = useState(['Todos']); // Inicia con 'Todos'
+
+    useEffect(() => {
+        // Obtener categorías del backend
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get('http://localhost:5001/api/categories');
+                const fetchedCategories = response.data.map(category => category.name);
+                setCategories(['Todos', ...fetchedCategories]); // Agregar 'Todos' al inicio
+                console.log("Categorías obtenidas:", fetchedCategories);
+                
+            } catch (error) {
+                console.error("Error al obtener las categorías:", error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     return (
         <nav className="navbar navbar-productos navbar-expand-lg">
@@ -12,7 +31,7 @@ const NavbarProductos = ({ onCategoryChange, activeCategory }) => {
                                 key={category}
                                 className={`nav-link text-white ${activeCategory === category ? 'active' : ''}`}
                                 onClick={() => onCategoryChange(category)} // Actualiza la categoría activa
-                                style={{ cursor: 'pointer' }} // Agregar un cursor pointer
+                                style={{ cursor: 'pointer' }}
                             >
                                 {category}
                             </div>

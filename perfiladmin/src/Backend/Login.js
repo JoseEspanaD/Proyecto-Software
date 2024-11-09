@@ -126,8 +126,41 @@ app.post('/Registros.js', async (req, res) => {
   }
 });
 
+//Buscar categorias para el navbar
+// Endpoint en el backend para obtener las categorías
+app.get('/api/categories', async (req, res) => {
+  try {
+      const result = await pool.query('SELECT * FROM category_table WHERE status = $1', ['on-line']);
+      res.json(result.rows); // Devuelve las categorías como un JSON
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ error: 'Error al obtener categorías' });
+  }
+});
 
-// Configuración de multer para guardar imágenes
+//Nueva Categoria
+app.post('/Cateogory.js', async (req, res) => {
+  const { name, abbreviation} = req.body;
+
+  try { 
+    const query = `
+      INSERT INTO category_table ( category,name,status)
+      VALUES ($2, $1, 'on-line')
+    `;
+    const result = await pool.query(query, [name, abbreviation]);
+
+    if (result.rowCount > 0) {
+      res.status(200).send('Registro exitoso!');
+    } else {
+      res.status(500).send('Error al registrar.');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+// Configuración de multer para guardar    
 const storage = multer.diskStorage({
   destination: './uploads', // Carpeta donde se almacenarán las imágenes
   filename: (req, file, cb) => {

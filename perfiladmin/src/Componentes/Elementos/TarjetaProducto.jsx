@@ -35,7 +35,7 @@ const TarjetaProducto = ({ id, image, title, price, weight }) => {
     };
 
     const handleCloseModal = () => {
-        setShowModal(false);
+        setShowModal(false); 
     };
 
     return (
