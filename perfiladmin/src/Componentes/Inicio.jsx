@@ -59,10 +59,7 @@ const Inicio = () => {
             Iniciar Sesión
           </Button>
         </Form>
-        {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
-        <div className="text-center mt-3">
-          <Link to="/register" style={{ color: 'white' }}>¿No tienes una cuenta? Regístrate aquí</Link>
-        </div>
+        {error && <Alert variant="danger" className="mt-3">{error}</Alert>} 
       </div>
     </Container>
   );

@@ -1,7 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom'; 
-//import Sidebar from './Elementos/Sidebar'; 
-//import Footer from './Elementos/Footer';
+import { useLocation } from 'react-router-dom';  
 import Sidebar from './Elementos/Sidebar';
 import Footer from './Elementos/Footer';
 import Header from './Elementos/Header';
@@ -18,10 +16,10 @@ function Formularios() {
         <Sidebar />
         <div className="content ">
           <Header /> 
-        <Container> 
+        <Container>
         {formularioActual === 'categoria' && <Categorianueva />}
         {formularioActual === 'Productos' && <Productonuevo />}
-      </Container>
+        </Container>
         </div>
         <Footer />
       </div>

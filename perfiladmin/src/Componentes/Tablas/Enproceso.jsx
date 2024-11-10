@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, Container, Dropdown, ButtonGroup } from 'react-bootstrap';
 import Descripcion from './Descripcion';
+ 
 
 function Enproceso() {
   const [enproceso, setEnproceso] = useState([]);
@@ -29,8 +30,8 @@ function Enproceso() {
 
   return (
     <Container>
-      <h1>En proceso</h1>
-      <Table striped bordered hover>
+      <h1 className="mb-4" style={{color: 'white'}}>En proceso</h1>
+      <Table striped bordered hover className="table table-dark">
         <thead>
           <tr>
             <th>#</th>

@@ -58,30 +58,32 @@ function Productonuevo() {
 
   return (
     <Form onSubmit={handleSubmitt}>
-      <h1>Nuevo Producto</h1>
+      <h1 className="mb-4" style={{color: 'white'}} >Nuevo Producto</h1>
       <Form.Group controlId="formBasicText">
-        <Form.Label>Nombre:</Form.Label>
+        <Form.Label style={{color: 'white'}}>Nombre:</Form.Label>
         <Form.Control type="text" placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
 
-        <Form.Label>Descripción:</Form.Label>
+        <Form.Label style={{color: 'white'}}>Descripción:</Form.Label>
         <Form.Control type="text" placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)} />
 
-        <Form.Label>Peso:</Form.Label>
+        <Form.Label style={{color: 'white'}}>Peso:</Form.Label>
         <Form.Control type="number" placeholder="Peso" value={weight} onChange={(e) => setWeight(e.target.value)} />
 
-        <Form.Label>Precio (Q):</Form.Label>
+        <Form.Label style={{color: 'white'}}>Precio (Q):</Form.Label>
         <Form.Control type="number" step="0.01" placeholder="0.00" value={price} onChange={(e) => setPrice(e.target.value)} />
 
-        <Form.Label>Categoría:</Form.Label>
+        <Form.Label style={{color: 'white'}}>Categoría:</Form.Label>
         <Form.Control as="select" value={category} onChange={(e) => setCategory(e.target.value)}> 
-          {categories.map((cat) => (
-            <option key={cat.category} value={cat.category}>
-              {cat.name}
-            </option>
-          ))}
-        </Form.Control>
+  <option value="">Selecciona una categoría</option>
+  {categories.map((cat) => (
+    <option key={cat.category} value={cat.category}>
+      {cat.name}
+    </option>
+  ))}
+</Form.Control>
 
-        <Form.Label>Imagen:</Form.Label>
+
+        <Form.Label style={{color: 'white'}}>Imagen:</Form.Label>
         <Form.Control type="file" onChange={handleImageChange} />
       </Form.Group>
 

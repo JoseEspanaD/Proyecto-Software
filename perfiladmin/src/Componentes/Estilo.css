@@ -4,6 +4,7 @@ body {
   background: linear-gradient(135deg, #000000, #7e0808, #b5472f, #290c02);
   height: 100vh; /* Asegura que el fondo cubra toda la altura de la ventana */
   margin: 0; /* Elimina el margen por defecto del body */
+  color: white;
 }
 
 h1 {
@@ -64,6 +65,46 @@ h1 {
 .info-text {
   max-width: 500px; /* Ancho máximo para el texto */
   font-size: 20px; /* Tamaño del texto */
+}
+
+.custom-card {
+  background-color: #333; /* Color oscuro similar al de la imagen */
+  color: white;
+  border-radius: 12px;
+  padding: 20px;
+  width: 250px;
+}
+
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon-style {
+  color: white;
+  opacity: 0.6; /* Ajusta la opacidad para que sea menos intensa */
+}
+
+.text-muted {
+  color: #cccccc;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: underline; /* Subrayado para el título principal */
+}
+
+.modal-subtitle {
+  font-size: 16px;
+  text-decoration: underline; /* Subrayado para subtítulos */
+  font-weight: bold;
+}
+
+.modal-date {
+  font-size: 14px;
+  text-decoration: underline; /* Subrayado para la fecha */
 }
 
 

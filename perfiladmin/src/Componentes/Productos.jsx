@@ -1,8 +1,9 @@
 import './Estilo.css';
-import Header from './Elementos/Header';
+import Header from './Elementos/Header'; 
 import Sidebar from './Elementos/Sidebar';
 import Footer from './Elementos/Footer';
 import NavbarProductos from './Elementos/NavbarProductos';
+import { Container } from 'react-bootstrap';
 import TarjetaProducto from './Elementos/TarjetaProducto'; // Importamos el componente de tarjeta
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -48,6 +49,7 @@ const Productos = () => {
             <Header />
             {/* Pasamos la función de categoría al Navbar */}
             <NavbarProductos onCategoryChange={handleCategoryChange} activeCategory={activeCategory} />
+            <Container>
             <div className="product-container">
                 <div className="row row-cols-1 row-cols-md-4 g-4">
                     {filteredProducts.map((product, index) => (
@@ -61,8 +63,10 @@ const Productos = () => {
                         />
                     ))}
                 </div>
-                <Footer />
+                
             </div>
+            </Container>
+            <Footer />
             
         </div>
         </div>

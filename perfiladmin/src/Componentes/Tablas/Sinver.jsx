@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, Container, Dropdown, ButtonGroup } from 'react-bootstrap';
-import Descripcion from './Descripcion';
+import Descripcion from './Descripcion'; 
 
 function Sinver() {
   const [sinver, setEnproceso] = useState([]);
@@ -33,8 +33,8 @@ function Sinver() {
         
          
         <Container> 
-            <h1>Sin Ver</h1>
-        <Table striped bordered hover>
+            <h1 className="mb-4" style={{color: 'white'}} >Sin Ver</h1>
+      <Table striped bordered hover className="table table-dark">
       <thead>
         <tr>
           <th>#</th>

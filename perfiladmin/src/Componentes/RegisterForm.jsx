@@ -13,7 +13,7 @@ function Formularios() {
         
         <div >  
           <Sidebar />
-        <div className="content "> 
+        <div className="content"> 
           <Header />
         <Container> 
         <Register />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';  
-import { Table, Container } from 'react-bootstrap';
+import { Table, Container } from 'react-bootstrap'; 
 function Admintabla() {
   const [admins, setAdmins] = useState([]);
 
@@ -19,8 +19,8 @@ function Admintabla() {
         
          
         <Container> 
-            <h1>Administradores Registrados</h1>
-        <Table striped bordered hover>
+            <h1 className="mb-4" style={{color: 'white'}}>Administradores Registrados</h1>
+        <Table striped bordered hover className="table table-dark">
       <thead>
         <tr>
           <th>#</th>

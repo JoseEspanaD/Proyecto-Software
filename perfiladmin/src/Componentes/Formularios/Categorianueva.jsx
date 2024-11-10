@@ -24,12 +24,12 @@ function Categorianueva() {
      
        
         <Form onSubmit={handleSubmitt}>
-          <h1>Nueva Categoria</h1>
+          <h1 className="mb-4" style={{color: 'white'}}>Nueva Categoria</h1>
           <Form.Group controlId="formBasicText">
-            <Form.Label>Nombre:</Form.Label>
+            <Form.Label style={{color: 'white'}}>Nombre:</Form.Label>
             <Form.Control type="text" placeholder="Name" value={name}
             onChange={(e) => setName(e.target.value)}/>
-            <Form.Label>Abreviación:</Form.Label>
+            <Form.Label style={{color: 'white'}}>Abreviación:</Form.Label>
             <Form.Control type="text" placeholder="cl" value={abbreviation}
             onChange={(e) => setAbbreviation(e.target.value)}/>  
           </Form.Group>

@@ -40,6 +40,64 @@ app.get('/Clientes.js', async ( req,res) => {
   }
 });
 
+
+app.get('/Clientes_recientes.js', async ( req,res) => {
+  try {
+    const query = `select * from customer order by id_customer DESC limit 5`;
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+//Cuantos administradores hay
+app.get('/total_administradores.js', async ( req,res) => {
+  try {
+    const query = `select count(*) from administrator where status = 'on-line'`;
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+//Cuantos clientes hay
+app.get('/total_clientes.js', async ( req,res) => {
+  try {
+    const query = `select count(*) from customer  where status = 'active'`;
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+//Cuantos Productos Hay
+app.get('/total_productos.js', async ( req,res) => {
+  try {
+    const query = `select count(*) from product where status ='1'`;
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+//Cuantas Categorias Hay
+app.get('/total_categorias.js', async ( req,res) => {
+  try {
+    const query = `select count(*) from category_table where status = 'on-line'`;
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
 app.get('/Administradores.js', async ( req,res) => {
   try {
     const query = `SELECT * FROM administrator`;
@@ -313,6 +371,23 @@ app.put('/UpdateProduct/:id', upload.single('image'), async (req, res) => {
     res.status(200).json({ message: 'Producto actualizado correctamente' });
   } catch (err) {
     console.error('Error en la consulta:', err.message);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+app.put('/UpdateStatus/:id_order', async (req, res) => {
+  const { id_order } = req.params;
+  const { status } = req.body;
+  try {
+    const query = `UPDATE "order" SET status = $1 WHERE id_order = $2`;
+    const result = await pool.query(query, [status, id_order]);
+    if (result.rowCount > 0) {
+      res.status(200).send('Estatus actualizado correctamente');
+    } else {
+      res.status(404).send('Pedido no encontrado');
+    }
+  } catch (err) {
+    console.error('Error en el servidor:', err);
     res.status(500).send('Error en el servidor');
   }
 });
