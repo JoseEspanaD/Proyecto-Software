@@ -50,30 +50,15 @@ app.get('/', (req, res) => {
 // Ruta para obtener productos, con opción de filtrar por categoría
 app.get('/api/products', async (req, res) => {
     const { category } = req.query; // Obtener la categoría de la query string
-    let query = "SELECT * FROM product WHERE status = 'disponible'";
+    let query = "SELECT * FROM product WHERE status = '1'";
     
     if (category) {
         // Agregar la condición de categoría si se proporciona
-        switch (category) {
-            case 'chorizosylonganizas':
-                query += " AND category = 'cl'";
-                break;
-            case 'madurados':
-                query += " AND category = 'm'";
-                break;
-            case 'embutidos':
-                query += " AND category = 'e'";
-                break;
-            case 'carnes':
-                query += " AND category = 'c'";
-                break;
-            default:
-                return res.status(400).send('Categoría no válida'); // Manejo de categoría no válida
-        }
+        query += " AND category = $1"; // Cambiar a un parámetro
     }
 
     try {
-        const result = await pool.query(query);
+        const result = await pool.query(query, category ? [category] : []); // Pasar la categoría como parámetro
         console.log('Resultado:', result.rows); // Log del resultado
         res.json(result.rows);
     } catch (err) {
@@ -104,7 +89,7 @@ app.get('/api/products/:id', async (req, res) => {
     }
 });
 
-// Ruta para manejar la creacion de pedidos
+// Ruta para manejar la creación de pedidos
 app.post('/api/orders', verifyToken, async (req, res) => {
     console.log('Recibiendo pedido:', req.body);
     console.log('Usuario ID:', req.userId); // Agregar este log
@@ -127,8 +112,8 @@ app.post('/api/orders', verifyToken, async (req, res) => {
         console.log('Insertando items del pedido');
         for (let item of cartItems) {
             await pool.query(
-                'INSERT INTO order_item (amount, id_order, id_product) VALUES ($1, $2, $3)',
-                [item.quantity, orderId, item.id]
+                'INSERT INTO order_item (amount, id_order, id_product, category) VALUES ($1, $2, $3, $4)',
+                [item.amount, orderId, item.id_product, item.category]
             );
         }
   
@@ -173,18 +158,29 @@ app.get('/api/user', verifyToken, async (req, res) => {
 app.get('/api/orders/:id/items', async (req, res) => {
     const { id } = req.params;
     try {
-      const result = await pool.query(`
-        SELECT oi.*, p.name as product_name, p.price as unit_price
-        FROM order_item oi
-        JOIN product p ON oi.id_product = p.id_product
-        WHERE oi.id_order = $1
-      `, [id]);
-      res.json(result.rows);
+        const result = await pool.query(`
+            SELECT oi.*, p.name as product_name, p.price as unit_price
+            FROM order_item oi
+            JOIN product p ON oi.id_product = p.id_product
+            WHERE oi.id_order = $1
+        `, [id]);
+        res.json(result.rows);
     } catch (error) {
-      console.error('Error al obtener los detalles del pedido:', error);
-      res.status(500).json({ error: 'Error al obtener los detalles del pedido' });
+        console.error('Error al obtener los detalles del pedido:', error);
+        res.status(500).json({ error: 'Error al obtener los detalles del pedido' });
     }
 });
+
+// Endpoint en el backend para obtener las categorías
+app.get('/api/categories', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM category_table WHERE status = $1', ['on-line']);
+        res.json(result.rows); // Devuelve las categorías como un JSON
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: 'Error al obtener categorías' });
+    }
+  });
 
 // Ruta para actualizar los datos del usuario
 app.put('/api/user', verifyToken, async (req, res) => {

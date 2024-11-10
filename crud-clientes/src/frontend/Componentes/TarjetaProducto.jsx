@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import './StylesComponent.css';
 
-const TarjetaProducto = ({ id, image, title, price, weight }) => {
+const TarjetaProducto = ({ id, image, title, price, weight, category }) => {
     const navigate = useNavigate();
     const [isFavorite, setIsFavorite] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -30,7 +30,7 @@ const TarjetaProducto = ({ id, image, title, price, weight }) => {
             updatedFavorites = favorites.filter(item => item.id !== id);
             setModalMessage('El producto se ha quitado de favoritos');
         } else {
-            updatedFavorites = [...favorites, { id, image, name: title, price }];
+            updatedFavorites = [...favorites, { id, image, name: title, price, category }];
             setModalMessage('El producto se ha añadido a favoritos');
         }
 
@@ -46,7 +46,7 @@ const TarjetaProducto = ({ id, image, title, price, weight }) => {
     return (
         <div className="col">
             <div className="card product-card">
-                <img src={image} className="card-img-top" alt={title} />
+                <img src={`http://localhost:5001/uploads/${image}`} className="card-img-top" alt={title} />
                 <div className="card-body">
                     <h5 className="card-title">{title}</h5>
                     <p className="card-text">Precio: {price}</p>

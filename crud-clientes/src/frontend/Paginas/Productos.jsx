@@ -54,6 +54,7 @@ const Productos = () => {
                             title={product.name} // Nombre del producto
                             price={`Q${product.price}`} // Precio
                             weight={`${product.weight}gr`} // Peso
+                            category={product.category} // Incluir category
                         />
                     ))}
                 </div>

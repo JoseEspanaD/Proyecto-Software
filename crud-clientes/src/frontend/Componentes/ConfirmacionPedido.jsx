@@ -33,6 +33,12 @@ const ConfirmacionPedido = ({ show, onHide, cartItems, total, onConfirm }) => {
     e.preventDefault();
     const token = localStorage.getItem('authToken');
     
+    const orderItems = cartItems.map(item => ({
+        id_product: item.id,
+        category: item.category,
+        amount: item.quantity
+    }));
+
     const response = await axios.post('http://localhost:5000/api/orders', 
       {
         nombre,
@@ -40,7 +46,7 @@ const ConfirmacionPedido = ({ show, onHide, cartItems, total, onConfirm }) => {
         municipio,
         comentarios,
         fechaPedido,
-        cartItems,
+        cartItems: orderItems,
         total
       },
       {

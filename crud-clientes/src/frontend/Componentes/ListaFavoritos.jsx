@@ -50,7 +50,7 @@ const ListaFavoritos = () => {
               {favoriteItems.map((item) => (
                 <tr key={item.id}>
                   <td>
-                    <img src={item.image} alt={item.name} style={{width: '50px', marginRight: '10px'}} />
+                    <img src={`http://localhost:5001/uploads/${item.image}`} alt={item.name} style={{width: '50px', marginRight: '10px'}} />
                   </td>
                   <td>{item.name}</td>
                   <td>{item.price}</td>

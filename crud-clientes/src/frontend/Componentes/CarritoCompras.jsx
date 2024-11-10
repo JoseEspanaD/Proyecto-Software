@@ -61,7 +61,7 @@ const CarritoCompras = ({ onProcederPedido }) => {
               {cartItems.map((item) => (
                 <tr key={item.id}>
                   <td>
-                    <img src={item.image} alt={item.name} style={{width: '50px', marginRight: '10px'}} />
+                  <img src={`http://localhost:5001/uploads/${item.image}`} alt={item.name} style={{width: '50px', marginRight: '10px'}} />
                     {item.name}
                   </td>
                   <td>
