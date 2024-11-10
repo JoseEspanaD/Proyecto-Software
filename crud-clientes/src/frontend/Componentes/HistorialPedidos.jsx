@@ -77,7 +77,7 @@ const HistorialPedidos = () => {
   return (
     <div className="historial-pedidos-container">
       <br />
-      <h2 style={{ color: 'white' }}>Historial de Pedidos</h2>
+      <h2 className="titulo-historial">Historial de Pedidos</h2>
       <div className="organizar-pedidos-container">
         <div className="organizar-pedidos" onClick={() => setShowFiltro(true)}>
           <span>Organizar Pedidos</span>
@@ -89,7 +89,7 @@ const HistorialPedidos = () => {
       <Table striped bordered hover responsive>
         <thead>
           <tr>
-            <th>ID Pedido</th>
+            <th>#</th>
             <th>Fecha</th>
             <th>Estado</th>
             <th>Precio Total</th>
@@ -97,9 +97,9 @@ const HistorialPedidos = () => {
           </tr>
         </thead>
         <tbody>
-          {pedidos.map((pedido) => (
+          {pedidos.map((pedido, index) => (
             <tr key={pedido.id_order}>
-              <td>{pedido.id_order}</td>
+              <td>{index + 1}</td>
               <td>{new Date(pedido.date).toLocaleDateString()}</td>
               <td>{pedido.status}</td>
               <td>Q {pedido.total_price}</td>
@@ -122,7 +122,7 @@ const HistorialPedidos = () => {
 
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Detalles del Pedido #{pedidoSeleccionado?.id_order}</Modal.Title>
+          <Modal.Title>Detalles del Pedido con ID #{pedidoSeleccionado?.id_order} Asignado</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Table striped bordered hover>

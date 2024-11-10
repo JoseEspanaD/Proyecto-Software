@@ -272,12 +272,12 @@
 }
 
 /*////////////////////////////////////////////// Tabla Carrito //////////////////////////////////////////////////////*/
-.tabla-carrito {
+.carrito-container {
     padding: 0 20px;
 }
 
 /*////////////////////////////////////////////// Tabla Favoritos //////////////////////////////////////////////////////*/
-.tabla-favoritos {
+.favoritos-container {
     padding: 0 20px;
 }
 
@@ -359,41 +359,103 @@
     color: rgb(43, 192, 242);
   }
   
-  /*/////////////////////////////// PERFIL DE USUARIO /////////////////////////////////*/
-  .user-profile {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 10px;
-    color: white;
+/*/////////////////////////////// PERFIL DE USUARIO /////////////////////////////////*/
+.user-profile {
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo más claro para mayor contraste */
+    padding: 30px; /* Aumentar el padding para más espacio interno */
+    border-radius: 15px; /* Bordes más redondeados */
+    color: #333; /* Color de texto más oscuro para mejor legibilidad */
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
 }
 
 .profile-header {
     display: flex;
     align-items: center;
+    margin-bottom: 20px; /* Espacio debajo del encabezado */
 }
 
 .profile-icon {
-    font-size: 50px;
-    margin-right: 10px;
+    font-size: 70px; /* Aumentar el tamaño del ícono */
+    margin-right: 15px; /* Espacio entre el ícono y el título */
+    color: #cd4545; /* Color del ícono */
 }
 
 .profile-info {
-    margin: 10px 0;
+    margin: 15px 0; /* Espacio entre cada campo de información */
+    display: flex; /* Usar flexbox para alinear etiquetas y valores */
+    justify-content: flex-start; /* Alinear etiquetas y valores a la izquierda */
+    align-items: center; /* Centrar verticalmente */
+    padding: 10px; /* Padding interno para mayor comodidad */
+    border: 1px solid #ddd; /* Borde gris claro */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #f9f9f9; /* Fondo claro para distinguir cada campo */
 }
 
 .profile-info label {
     font-weight: bold;
+    color: #555; /* Color de etiqueta más suave */
+    width: 150px; /* Ancho fijo para las etiquetas */
 }
 
+.profile-info span, .profile-info input {
+    flex: 1; /* Permitir que el span y el input ocupen el espacio restante */
+    margin-left: 10px; /* Espacio entre la etiqueta y el valor */
+}
+
+.btn-editar-personalizado {
+    background-color: #ed4949; /* Tono rojo claro */
+    color: #ffffff; /* Color de texto oscuro */
+    border: none; /* Sin borde */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 10px 20px; /* Padding interno */
+    cursor: pointer; /* Cambiar cursor al pasar */
+    transition: background-color 0.3s; /* Transición suave */
+    margin-right: 10px; /* Añadir espacio a la derecha */
+}
+
+.btn-editar-personalizado:hover {
+    background-color: #e62639; /* Color de fondo al pasar el cursor */
+}
+
+.btn-guardar-personalizado {
+    background-color: #007bff; /* Tono azul claro */
+    color: white; /* Color de texto blanco */
+    border: none; /* Sin borde */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 10px 20px; /* Padding interno */
+    cursor: pointer; /* Cambiar cursor al pasar */
+    transition: background-color 0.3s; /* Transición suave */
+    margin-left: 10px; /* Añadir espacio a la izquierda */
+}
+
+.btn-guardar-personalizado:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el cursor */
+}
+
+/* Estilo para los campos de entrada */
 .profile-info input {
-    margin-left: 10px;
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    flex: 1; /* Permitir que el input ocupe el espacio restante */
+    margin-left: 10px; /* Espacio entre la etiqueta y el valor */
+    padding: 10px; /* Padding interno para mayor comodidad */
+    border: 1px solid #ccc; /* Borde gris claro */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: border-color 0.3s; /* Transición suave para el borde */
+}
+
+.profile-info input:focus {
+    border-color: #007bff; /* Cambiar el color del borde al enfocar */
+    outline: none; /* Eliminar el contorno predeterminado */
 }
   
+/*//////////////////////////////////TITULOS////////////////////////////////////*/
+.titulo-historial {
+    background-color: rgba(255, 255, 255, 0.5); /* Fondo blanco traslúcido */
+    padding: 10px; /* Espacio interno */
+    border-radius: 8px; /* Bordes redondeados */
+    color: #0f0c0c; /* Color del texto */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+}
 
-  
   
   
   

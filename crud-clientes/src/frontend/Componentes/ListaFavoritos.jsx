@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button } from 'react-bootstrap';
-import { FaTrash, FaEye } from 'react-icons/fa';
+import { FaTrash, FaEye, FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import './StylesComponent.css';
 
@@ -28,9 +28,13 @@ const ListaFavoritos = () => {
   return (
     <div className="favoritos-container">
       <br />
-      <h2 className="mb-4" style={{color: 'white'}}>Mis Favoritos</h2>
+      <h2 className="titulo-historial">Mis Favoritos</h2>
       {favoriteItems.length === 0 ? (
-        <h4 className="mb-4" style={{color: 'white'}}>No tienes productos favoritos...</h4>
+        <div className="text-center">
+        <h4 className="mb-4" style={{color: 'white'}}>
+          <FaStar /> No tiene productos favoritos... ¡Agrega algunos productos!
+        </h4>
+      </div>
       ) : (
         <div className='tabla-favoritos'>
           <Table striped bordered hover responsive>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, InputGroup, FormControl } from 'react-bootstrap';
-import { FaTrash, FaPlus, FaMinus } from 'react-icons/fa';
+import { FaTrash, FaPlus, FaMinus, FaShoppingCart } from 'react-icons/fa';
 import './StylesComponent.css';
 
 const CarritoCompras = ({ onProcederPedido }) => {
@@ -38,9 +38,13 @@ const CarritoCompras = ({ onProcederPedido }) => {
   return (
     <div className="carrito-container">
       <br />
-      <h2 className="mb-4" style={{color: 'white'}}>Carrito de Compras</h2>
+      <h2 className="titulo-historial">Carrito de Compras</h2>
       {cartItems.length === 0 ? (
-        <h4 className="mb-4" style={{color: 'white'}}>Tu carrito está vacío...</h4>
+        <div className="text-center">
+          <h4 className="mb-4" style={{color: 'white'}}>
+            <FaShoppingCart /> Tu carrito está vacío... ¡Agrega algunos productos!
+          </h4>
+        </div>
       ) : (
         <div className="tabla-carrito">
           <Table striped bordered hover responsive>
@@ -92,14 +96,16 @@ const CarritoCompras = ({ onProcederPedido }) => {
             <strong><h4 style={{color: 'white'}}>Monto mínimo de compra: Q300</h4></strong>
             <strong><h4 style={{color: 'white'}}>Total a pagar: Q{total.toFixed(2)}</h4></strong>
           </div>
-          <Button 
-            variant="primary" 
-            className="mt-3 w-100"
-            onClick={() => onProcederPedido(cartItems, total)}
-            disabled={total < 300}
-          >
-            Proceder con el Pedido
-          </Button>
+          <div className="text-end">
+            <Button 
+              variant="primary" 
+              className="mt-3"
+              onClick={() => onProcederPedido(cartItems, total)}
+              disabled={total < 300}
+            >
+              Proceder con el Pedido
+            </Button>
+          </div>
         </div>
       )}
     </div>

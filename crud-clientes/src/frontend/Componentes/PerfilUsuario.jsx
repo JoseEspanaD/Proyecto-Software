@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa'; // Icono de perfil
 import './StylesComponent.css';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Importar Bootstrap
 
 const PerfilUsuario = () => {
     const [userData, setUserData] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({});
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState(''); // 'success' o 'danger'
 
     useEffect(() => {
         // Función para obtener los datos del usuario
@@ -26,14 +29,38 @@ const PerfilUsuario = () => {
 
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
+        setAlertMessage('');
+        setAlertType('');
     };
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const validateFormData = (data) => {
+        const errors = {};
+        if (!data.name) {
+            errors.name = "El nombre es obligatorio.";
+        }
+        if (!data.e_mail || !/\S+@\S+\.\S+/.test(data.e_mail)) {
+            errors.e_mail = "El correo electrónico no es válido.";
+        }
+        if (!data.phone || !/^\d+$/.test(data.phone)) {
+            errors.phone = "El teléfono debe contener solo números.";
+        }
+        // Agregar más validaciones según sea necesario
+        return errors;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const errors = validateFormData(formData);
+        if (Object.keys(errors).length > 0) {
+            setAlertMessage(Object.values(errors).join('\n'));
+            setAlertType('danger'); // Tipo de alerta para errores
+            return;
+        }
+        
         const response = await fetch('http://localhost:5000/api/user', {
             method: 'PUT',
             headers: {
@@ -45,14 +72,29 @@ const PerfilUsuario = () => {
         if (response.ok) {
             setUserData(formData);
             setIsEditing(false);
+            setAlertMessage('Los datos se han editado correctamente.'); // Mensaje de éxito
+            setAlertType('success'); // Tipo de alerta para éxito
+            
+            // Desaparecer el mensaje después de 4 segundos
+            setTimeout(() => {
+                setAlertMessage('');
+                setAlertType('');
+            }, 4000);
         } else {
             const errorData = await response.json();
             console.error('Error al actualizar:', errorData);
+            setAlertMessage('Error al actualizar los datos.'); // Mensaje de error
+            setAlertType('danger');
         }
     };
 
     return (
         <div className="user-profile">
+            {alertMessage && (
+                <div className={`alert alert-${alertType}`} role="alert">
+                    {alertMessage}
+                </div>
+            )}
             <div className="profile-header">
                 <FaUserCircle className="profile-icon" />
                 <h2>Perfil de Usuario</h2>
@@ -98,10 +140,10 @@ const PerfilUsuario = () => {
                         <span>{userData.municipio}</span>
                     )}
                 </div>
-                <button type="button" onClick={handleEditToggle}>
+                <button type="button" className="btn-editar-personalizado" onClick={handleEditToggle}>
                     {isEditing ? 'Cancelar' : 'Editar'}
                 </button>
-                {isEditing && <button type="submit">Guardar Cambios</button>}
+                {isEditing && <button type="submit" className="btn-guardar-personalizado">Guardar Cambios</button>}
             </form>
         </div>
     );

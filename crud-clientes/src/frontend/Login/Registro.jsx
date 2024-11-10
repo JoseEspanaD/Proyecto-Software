@@ -7,6 +7,7 @@ const Registro = () => {
   const [e_mail, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -20,11 +21,14 @@ const Registro = () => {
       localStorage.setItem('id_customer', userId);
 
       setError('');
-      alert('Login exitoso');
+      setSuccess('Login exitoso');
 
-      navigate('/Inicio');
+      setTimeout(() => {
+        navigate('/Inicio');
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.error || 'Error al iniciar sesión');
+      setSuccess('');
     }
   };
 
@@ -60,6 +64,7 @@ const Registro = () => {
           </Button>
         </Form>
         {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
+        {success && <Alert variant="success" className="mt-3">{success}</Alert>}
         <div className="text-center mt-3">
           <Link to="/register" style={{ color: 'white' }}>¿No tienes una cuenta? Regístrate aquí</Link>
         </div>

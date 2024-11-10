@@ -25,23 +25,20 @@ body {
     object-fit: cover; /* Asegura que las imágenes mantengan su proporción */
 }
 
-/* Ajusta la opacidad de las imágenes */
 .dimmed-image {
     filter: brightness(80%);
 }
 
-/* Estilos para la sección de información */
+/*ESTILOS PARA LA SECCION DE INFORMACION*/
 .info-container {
     text-align: center; /* Centra el texto */
-    margin: 20px 0; /* Margen vertical para separar del carrusel */
+    margin: 50px 0; /* Margen vertical para separar del carrusel */
 }
 
-.info-title {
-    color: #000; /* Color negro para el título */
-    font-size: 35px; /* Tamaño del título */
-    margin-bottom: 15px; /* Espacio debajo del título */
-    font-weight: bold; /* Hace el texto en negrita */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombreado del texto */
+.info-container h1 {
+    font-size: 36px;
+    color: #ffffff;
+    margin: 40px 0;
 }
 
 .info-content {
@@ -52,15 +49,85 @@ body {
 }
 
 .info-image {
-    width: 350px; /* Ajusta el tamaño de la imagen */
+    width: 400px; /* Ajusta el tamaño de la imagen */
     height: auto; /* Mantiene la proporción de la imagen */
     margin-right: 20px; /* Espacio entre la imagen y el texto */
     border-radius: 15px;
 }
 
 .info-text {
-    max-width: 500px; /* Ancho máximo para el texto */
+    max-width: 550px; /* Ancho máximo para el texto */
     font-size: 20px; /* Tamaño del texto */
+}
+
+/* Sección de Bienvenida */
+.welcome-section {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f8f9fa; /* Fondo claro */
+    border-radius: 10px;
+    margin: 20px 0; /* Espacio entre secciones */
+}
+
+.welcome-section h1 {
+    font-size: 36px;
+    color: #7e0808; /* Color atractivo */
+}
+
+.welcome-section p {
+    font-size: 20px;
+    margin: 20px 0;
+}
+
+.explore-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #7e0808; /* Color del botón */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.explore-button:hover {
+    background-color: #b5472f; /* Color al pasar el mouse */
+}
+
+/* Sección de Categorías */
+.categories-section {
+    text-align: center;
+    padding: 40px 20px;
+    margin: 10px 0; /* Reducir espacio entre secciones */
+}
+
+.categories-section h1 {
+    font-size: 36px;
+    color: #ffffff;
+}
+
+.categories-section p {
+    font-size: 20px;
+    color: #000;
+}
+
+/* Sección de Contacto */
+.contact-section {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #f8f9fa; /* Fondo claro */
+    border-radius: 10px;
+    margin: 20px 0; /* Espacio entre secciones */
+}
+
+.contact-section h2 {
+    font-size: 28px;
+    color: #7e0808; /* Color atractivo */
+}
+
+.contact-section p {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #333; /* Color del texto */
 }
 
 
