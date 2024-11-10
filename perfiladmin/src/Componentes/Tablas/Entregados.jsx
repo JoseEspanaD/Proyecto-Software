@@ -27,6 +27,7 @@ function Enproceso() {
       console.error('Error updating status:', error);
     }
   };
+  let num = 1;
   
     return (
         
@@ -49,7 +50,7 @@ function Enproceso() {
       <tbody> 
         {entregado.map((entregados) => (
             <tr key={entregados.id_order}>
-              <td>{entregados.id_order}</td>
+              <td>{num++}</td>
               <td>{entregados.status}</td>
               <td>{entregados.comment}</td>
               <td>{new Date(entregados.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
@@ -63,7 +64,7 @@ function Enproceso() {
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'En proceso')}>En proceso</Dropdown.Item>
                     <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'Entregados')}>Entregados</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'Sin ver')}>Sin ver</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'sin ver')}>Sin ver</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </td>

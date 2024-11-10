@@ -14,7 +14,7 @@ function Clientestabla() {
       });
   }, []);
   
-  
+  let num = 1;
     return (
         
          
@@ -35,7 +35,7 @@ function Clientestabla() {
       <tbody> 
         {clientes.map((cliente) => (
             <tr key={cliente.id_customer}>
-              <td>{cliente.id_customer}</td>
+              <td>{num++}</td>
               <td>{cliente.name}</td>
               <td>{cliente.e_mail}</td>
               <td>{cliente.status}</td>

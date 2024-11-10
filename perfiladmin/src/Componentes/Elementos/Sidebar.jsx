@@ -33,6 +33,7 @@ function Sidebar() {
         <Nav.Link onClick={() => handleClicktwo('Clientes')} className="text-white">Clientes Registrados</Nav.Link>
         <Nav.Link onClick={() => handleClickthree()} className="text-white">Productos Disponibles</Nav.Link>
         <Nav.Link onClick={() => handleClicktwo('Admin')} className="text-white">Administradores</Nav.Link>
+        <Nav.Link onClick={() => handleClick('cliente')} className="text-white">Agregar Cliente</Nav.Link>
       </Nav>
     </div>
   );

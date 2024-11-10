@@ -7,8 +7,9 @@ import Header from './Elementos/Header';
 import Clientestabla from './Tablas/Clientestabla';
 import Enproceso from './Tablas/Enproceso';
 import Entregados from './Tablas/Entregados';
-import Sinver from './Tablas/Sinver';
+import Sinver from './Tablas/Sinver'; 
 import Admintabla from './Tablas/Admintabla';
+import Categorias from './Tablas/Cateogorias';
 import './Estilo.css';
 function Tablas() {
   const location = useLocation();
@@ -25,7 +26,7 @@ function Tablas() {
         {tablaActual === 'Entregados' && <Entregados />}
         {tablaActual === 'Sinver' && <Sinver/>}
         {tablaActual === 'Admin' && <Admintabla/>}
-         
+        {tablaActual === 'Categorias' && <Categorias/>}
         </Container>
         <Footer />
         </div> 

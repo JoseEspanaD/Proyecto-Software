@@ -5,6 +5,8 @@ import Footer from './Elementos/Footer';
 import Header from './Elementos/Header';
 import Categorianueva from './Formularios/Categorianueva';
 import Productonuevo from './Formularios/Productonuevo'; 
+import Perfiladmin from './Formularios/Perfiladmin';
+import Clientenuevo from './Formularios/Clientenuevo';
 import './Estilo.css';
 import { Container } from 'react-bootstrap';
 function Formularios() {
@@ -19,6 +21,8 @@ function Formularios() {
         <Container>
         {formularioActual === 'categoria' && <Categorianueva />}
         {formularioActual === 'Productos' && <Productonuevo />}
+        {formularioActual === 'Perfiladmin' && <Perfiladmin />}
+        {formularioActual === 'cliente' && <Clientenuevo />}
         </Container>
         </div>
         <Footer />

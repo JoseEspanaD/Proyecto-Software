@@ -28,7 +28,7 @@ function Sinver() {
     }
   };
   
-  
+  let num = 1;
     return (
         
          
@@ -50,7 +50,7 @@ function Sinver() {
       <tbody> 
         {sinver.map((sinvers) => (
             <tr key={sinvers.id_order}>
-              <td>{sinvers.id_order}</td>
+              <td>{num++}</td>
               <td>{sinvers.status}</td>
               <td>{sinvers.comment}</td>
               <td>{new Date(sinvers.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
@@ -64,7 +64,7 @@ function Sinver() {
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'En proceso')}>En proceso</Dropdown.Item>
                     <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'Entregados')}>Entregados</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'Sin ver')}>Sin ver</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'sin ver')}>Sin ver</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </td>

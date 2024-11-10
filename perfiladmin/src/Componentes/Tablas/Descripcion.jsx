@@ -27,7 +27,7 @@ function Descripcion({ nombreCliente, fechaPedido, id_order }) {
 
   // Función para calcular el total de la columna "Precio Total"
   const totalGeneral = descripcion.reduce((sum, item) => sum + parseFloat(item.total_price || 0), 0);
-
+  let num = 1;
   return (
     <Container>
       <Button variant="primary" onClick={handleOpenModal}>
@@ -57,7 +57,7 @@ function Descripcion({ nombreCliente, fechaPedido, id_order }) {
             <tbody>
               {descripcion.map((item) => (
                 <tr key={item.id_item}>
-                  <td>{item.id_item}</td>
+                  <td>{num++ }</td>
                   <td>{item.name}</td>
                   <td>{item.price}</td>
                   <td>{item.total_price}</td>

@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';  
 import { Table, Container } from 'react-bootstrap'; 
 function Admintabla() {
-  const [admins, setAdmins] = useState([]);
+  const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/Administradores.js')  // Cambiado a .get()
+    axios.get('http://localhost:5001/Categorias_table')  // Cambiado a .get()
       .then(response => {
-        setAdmins(response.data);
+        setCategorias(response.data);
       })
       .catch(error => {
         console.error('Error fetching clientes:', error);
@@ -24,24 +24,22 @@ function Admintabla() {
       <thead>
         <tr>
           <th>#</th>
-          <th>Name</th>
-          <th>Correo electronico</th>
+          <th>Nombre</th>
+          <th>Abreviación</th>
           <th>Status</th>
-          <th>Direccion</th>
-          <th>Telefono</th> 
-          <th>Municipio</th> 
+          <th>Cambiar Estatus</th>
+          <th>Eliminar Categoria</th>  
         </tr>
       </thead>
       <tbody> 
-        {admins.map((admin) => (
-            <tr key={admin.id_admin}>
+        {categorias.map((categoria) => (
+            <tr key={categoria.category}>
               <td>{num++}</td>
-              <td>{admin.name}</td>
-              <td>{admin.e_mail}</td>
-              <td>{admin.status}</td>
-              <td>{admin.address}</td>
-              <td>{admin.phone}</td>
-              <td>{admin.municipio}</td>
+              <td>{categoria.name}</td>
+              <td>{categoria.category}</td>
+              <td>{categoria.status}</td>
+              <td> </td>
+              <td> </td> 
             </tr>
           ))} 
          

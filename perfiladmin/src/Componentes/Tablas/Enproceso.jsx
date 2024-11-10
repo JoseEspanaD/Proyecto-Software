@@ -27,7 +27,7 @@ function Enproceso() {
       console.error('Error updating status:', error);
     }
   };
-
+  let num = 1;
   return (
     <Container>
       <h1 className="mb-4" style={{color: 'white'}}>En proceso</h1>
@@ -47,7 +47,7 @@ function Enproceso() {
         <tbody>
           {enproceso.map((enprocesos) => (
             <tr key={enprocesos.id_order}>
-              <td>{enprocesos.id_order}</td>
+              <td>{num++}</td>
               <td>{enprocesos.status}</td>
               <td>{enprocesos.comment}</td>
               <td>{new Date(enprocesos.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
@@ -61,7 +61,7 @@ function Enproceso() {
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => handleStatusChange(enprocesos.id_order, 'En proceso')}>En proceso</Dropdown.Item>
                     <Dropdown.Item onClick={() => handleStatusChange(enprocesos.id_order, 'Entregados')}>Entregados</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(enprocesos.id_order, 'Sin ver')}>Sin ver</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleStatusChange(enprocesos.id_order, 'sin ver')}>Sin ver</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </td>

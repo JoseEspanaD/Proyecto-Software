@@ -1,9 +1,11 @@
 import React, { useState } from 'react';  
 import { Form, Button } from 'react-bootstrap'; 
+import { useNavigate } from 'react-router-dom';
 function Categorianueva() {
   const [name, setName] = useState(''); 
   const [abbreviation, setAbbreviation] = useState(''); 
-  const [ setMessage] = useState('');
+  const [message,setMessage] = useState('');
+  const navigate = useNavigate();  
 
   const handleSubmitt = async (e) => {
     e.preventDefault();
@@ -15,10 +17,20 @@ function Categorianueva() {
       body: JSON.stringify(formData),
     });
      
-    alert('Categoria Agregada!');
+    if (response.status === 23505) { 
+      const data = await response.json();
+      alert(data.message);  
+    } else if (response.ok) {
+      alert('Categoria Agregada!');
+    } else {
+      setMessage('Error en el registro');
+    }
     } catch (error) {
       setMessage('Error en el registro');
     }
+    };
+    const handleClick = (tablas) => {
+      navigate('/Tablas', { state: { tablas } }); 
     };
     return (
      
@@ -34,6 +46,9 @@ function Categorianueva() {
             onChange={(e) => setAbbreviation(e.target.value)}/>  
           </Form.Group>
           <Button variant="outline-danger" type="submit" className="mt-3">
+            Registro
+          </Button> 
+          <Button variant="outline-danger" onClick={() => handleClick('Categorias')} className="mt-3">
             Registro
           </Button> 
         </Form>  

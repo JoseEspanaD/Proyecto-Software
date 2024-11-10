@@ -29,6 +29,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const SECRET_KEY = process.env.SECRET_KEY;  // Obtener la clave secreta de las variables de entorno
+const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(403).send({ auth: false, message: 'No token provided.' });
+  
+  jwt.verify(token, 'SECRET_KEY', (err, decoded) => {
+      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+      
+      req.userId = decoded.id;
+      next();
+  });
+};
 app.get('/Clientes.js', async ( req,res) => {
   try {
     const query = `SELECT * FROM customer`;
@@ -43,7 +54,7 @@ app.get('/Clientes.js', async ( req,res) => {
 
 app.get('/Clientes_recientes.js', async ( req,res) => {
   try {
-    const query = `select * from customer order by id_customer DESC limit 5`;
+    const query = `select * from customer where status = 'active'order by id_customer DESC limit 5`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -137,7 +148,7 @@ app.get('/Entregados.js', async (req, res) => {
 app.get('/Sinver.js', async (req, res) => {
   try {
     const query = `SELECT O.id_order,O.status,O.comment,O.date,O.total_price,C.name 
-    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='Sin ver'`;
+    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='sin ver'`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -184,6 +195,28 @@ app.post('/Registros.js', async (req, res) => {
   }
 });
 
+app.post('/Registros_clientes.js', async (req, res) => {
+  const { name, password, e_mail, address,phone,municipio } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10); // Encriptar la contraseña
+    const query = `
+      INSERT INTO customer (name, e_mail, status, password, address,phone,municipio)
+      VALUES ($1, $2, 'active', $3, $4,$5,$6)
+    `;
+    const result = await pool.query(query, [name, e_mail, hashedPassword, address,phone,municipio]);
+
+    if (result.rowCount > 0) {
+      res.status(200).send('Registro exitoso!');
+    } else {
+      res.status(500).send('Error al registrar.');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
 //Buscar categorias para el navbar
 // Endpoint en el backend para obtener las categorías
 app.get('/api/categories', async (req, res) => {
@@ -193,6 +226,31 @@ app.get('/api/categories', async (req, res) => {
   } catch (error) {
       console.error(error.message);
       res.status(500).json({ error: 'Error al obtener categorías' });
+  }
+});
+
+app.get('/Categorias_table', async ( req,res) => {
+  try {
+    const query = `SELECT * FROM category_table`;
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+//Configuracion administrador
+app.get('/api/admin', verifyToken, async (req, res) => {
+  try {
+      const result = await pool.query('SELECT name, e_mail, address, phone, municipio FROM administrator WHERE id_customer = $1', [req.userId]);
+      if (result.rows.length > 0) {
+          res.json(result.rows[0]);
+      } else {
+          res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+  } catch (error) {
+      console.error('Error al obtener datos del usuario:', error);
+      res.status(500).json({ error: 'Error al obtener datos del usuario' });
   }
 });
 
