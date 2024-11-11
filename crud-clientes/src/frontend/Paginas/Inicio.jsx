@@ -1,20 +1,29 @@
+import React, { useState, useEffect } from 'react';
 import { Carousel } from 'react-bootstrap';
-import './StylesPaginas.css'; 
-import Carrousel1 from '../Assets/Carrousel1.PNG';
-import Carrousel2 from '../Assets/Carrousel2.PNG';
-import Carrousel3 from '../Assets/Carrousel3.PNG';
-import Carrousel4 from '../Assets/Carrousel4.PNG';
-import Carrousel5 from '../Assets/Carrousel5.PNG';
-import Logotipo2 from '../Assets/Logotipo2.PNG'; 
+import './StylesPaginas.css';
 import Navbar from '../Componentes/Navbar';
-import { FaPhone, FaEnvelope } from 'react-icons/fa'; // Importar iconos
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { FaPhone, FaEnvelope } from 'react-icons/fa';
+import Logotipo2 from '../Assets/Logotipo2.PNG';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Inicio() {
-  const navigate = useNavigate(); // Inicializar useNavigate
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
+
+  // Obtener categorías de la base de datos
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/categories') // Endpoint para obtener las categorías
+      .then(response => {
+        setCategories(response.data);
+      })
+      .catch(error => {
+        console.error('Error al obtener las categorías:', error);
+      });
+  }, []);
 
   const handleExploreProducts = () => {
-    navigate('/productos'); // Redirigir a la ruta de Pedidos
+    navigate('/productos');
   };
 
   return (
@@ -34,34 +43,35 @@ function Inicio() {
         <p>Ofrecemos una amplia variedad de embutidos, desde chorizos ahumados hasta jamones curados, todos elaborados con pasión y dedicación.</p>
       </div>
 
-      {/* CARROUSEL */}
+      {/* CAROUSEL dinámico con imágenes de la base de datos */}
       <Carousel className="custom-carousel" controls={true} indicators={true}>
-        <Carousel.Item>
-          <div className="carousel-container">
-            <img className="d-block carousel-image" src={Carrousel1} alt="First slide" />
-            <img className="d-block carousel-image" src={Carrousel2} alt="Second slide" />
-            <img className="d-block carousel-image" src={Carrousel3} alt="Third slide" />
-          </div>
-        </Carousel.Item>
-        <Carousel.Item>
-          <div className="carousel-container">
-            <img className="d-block carousel-image" src={Carrousel4} alt="First slide" />
-            <img className="d-block carousel-image" src={Carrousel5} alt="Second slide" />
-            <img className="d-block carousel-image" src={Carrousel3} alt="Third slide" />
-          </div>
-        </Carousel.Item>
-        {/* Agrega más Carousel.Item según sea necesario */}
+        {categories
+          .filter(category => category.image) // Filtra las categorías que tienen una imagen
+          .map((category, index) => (
+            <Carousel.Item key={index}>
+              <div className="carousel-container">
+                <img
+                  className="d-block carousel-image"
+                  src={`http://localhost:5001/uploads/${category.image}`} // Construye la URL completa de la imagen
+                  alt={`Imagen de la categoría ${category.name}`}
+                />
+                <Carousel.Caption>
+                  <h3>{category.name}</h3>
+                </Carousel.Caption>
+              </div>
+            </Carousel.Item>
+          ))}
       </Carousel>
 
-      {/* INFORMACION DE EMPRESA */}
+      {/* INFORMACIÓN DE EMPRESA */}
       <div className="info-container">
         <h1>¿Quiénes Somos?</h1>
         <div className="info-content">
           <img className="info-image" src={Logotipo2} alt="Carnespa" />
           <p className="info-text">
-            Carnespa es una empresa dedicada a la producción de embutidos de alta calidad, 
-            utilizando los mejores ingredientes y métodos tradicionales para ofrecer productos 
-            deliciosos y frescos a nuestros clientes. Nos comprometemos a brindar excelencia 
+            Carnespa es una empresa dedicada a la producción de embutidos de alta calidad,
+            utilizando los mejores ingredientes y métodos tradicionales para ofrecer productos
+            deliciosos y frescos a nuestros clientes. Nos comprometemos a brindar excelencia
             en cada bocado.
           </p>
         </div>
@@ -70,9 +80,9 @@ function Inicio() {
       {/* Sección de Contacto */}
       <div className="contact-section">
         <h2>Contáctanos</h2>
-        <p><FaEnvelope /> S E R V I C I O A L C L I E N T E C A R N E S P A @ G M A I L . C O M</p>
-        <p><FaEnvelope /> R E C E P C I O N C A R N E S P A @ G M A I L . C O M</p>
-        <p><FaPhone /> P B X 2 2 8 9 4 5 4 2</p>
+        <p><FaEnvelope /> SERVICIOALCLIENTE@CARNESPA.COM</p>
+        <p><FaEnvelope /> RECEPCION@CARNESPA.COM</p>
+        <p><FaPhone /> PBX 2289-4542</p>
       </div>
     </>
   );

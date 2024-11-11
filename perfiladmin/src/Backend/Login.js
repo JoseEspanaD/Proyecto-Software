@@ -177,7 +177,7 @@ app.post('/Registros.js', async (req, res) => {
   const { name, password, e_mail, address,phone,municipio } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10); // Encriptar la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);  
     const query = `
       INSERT INTO administrator (name, e_mail, status, password, address,phone,municipio)
       VALUES ($1, $2, 'on-line', $3, $4,$5,$6)
@@ -219,10 +219,11 @@ app.post('/Registros_clientes.js', async (req, res) => {
 
 //Buscar categorias para el navbar
 // Endpoint en el backend para obtener las categorías
+// server.js
 app.get('/api/categories', async (req, res) => {
   try {
-      const result = await pool.query('SELECT * FROM category_table WHERE status = $1', ['on-line']);
-      res.json(result.rows); // Devuelve las categorías como un JSON
+      const result = await pool.query('SELECT category AS code, name FROM category_table WHERE status = $1', ['on-line']);
+      res.json(result.rows); // Devuelve categorías con 'code' y 'name'
   } catch (error) {
       console.error(error.message);
       res.status(500).json({ error: 'Error al obtener categorías' });
@@ -254,16 +255,28 @@ app.get('/api/admin', verifyToken, async (req, res) => {
   }
 });
 
-//Nueva Categoria
-app.post('/Cateogory.js', async (req, res) => {
-  const { name, abbreviation} = req.body;
 
-  try { 
+
+// Configuración de multer para guardar    
+const storage = multer.diskStorage({
+  destination: './uploads', // Carpeta donde se almacenarán las imágenes
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Renombrar el archivo
+  },
+});
+const upload = multer({ storage: storage });
+
+//Nueva Categoria
+app.post('/Cateogory.js', upload.single('image'), async (req, res) => {
+  const { name, category } = req.body;
+  const image = req.file ? req.file.filename : null; // Nombre del archivo guardado
+
+  try {
     const query = `
-      INSERT INTO category_table ( category,name,status)
-      VALUES ($2, $1, 'on-line')
+      INSERT INTO category_table(name, category, status,  image)
+      VALUES ($1, $2,  'on-line', $3)
     `;
-    const result = await pool.query(query, [name, abbreviation]);
+    const result = await pool.query(query, [name,category,image]);
 
     if (result.rowCount > 0) {
       res.status(200).send('Registro exitoso!');
@@ -275,15 +288,6 @@ app.post('/Cateogory.js', async (req, res) => {
     res.status(500).send('Error en el servidor');
   }
 });
-
-// Configuración de multer para guardar    
-const storage = multer.diskStorage({
-  destination: './uploads', // Carpeta donde se almacenarán las imágenes
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Renombrar el archivo
-  },
-});
-const upload = multer({ storage: storage });
 
 // Ruta para agregar un nuevo producto con imagen
 app.post('/Nuevoproduct', upload.single('image'), async (req, res) => {

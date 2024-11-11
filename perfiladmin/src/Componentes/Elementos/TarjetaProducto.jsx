@@ -47,15 +47,7 @@ const TarjetaProducto = ({ id, image, title, price, weight }) => {
                     <p className="card-text">Precio: {price}</p>
                     <p className="card-text">Peso: {weight}</p>
                     <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                        <FaStar
-                            onClick={handleFavoriteToggle}
-                            size={24}
-                            style={{
-                                cursor: 'pointer',
-                                marginLeft: '10px',
-                                color: isFavorite ? 'gold' : 'gray',
-                            }}
-                        />
+                        
                         <FaArrowCircleRight
                             className="arrow-icon"
                             onClick={handleRedirect}
