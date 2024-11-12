@@ -17,14 +17,30 @@ function Sinver() {
   }, []);
   
   const handleStatusChange = async (id_order, newStatus) => {
-    console.log(`Cambiando el estatus del pedido ${id_order} a ${newStatus}`); // Agrega este log
+    const currentOrder = sinver.find(order => order.id_order === id_order);
+    const validTransitions = {
+        'sin ver': 'En proceso',
+        'En proceso': 'Entregados'
+    };
+
+    if (validTransitions[currentOrder.status] !== newStatus) {
+        console.error('Transición de estado no válida');
+        return; // No permitir el cambio
+    }
+
+    const startTime = new Date(); // Guardar el tiempo de inicio
     try {
-      await axios.put(`http://localhost:5001/UpdateStatus/${id_order}`, { status: newStatus });
-      setEnproceso(sinver.map(order => 
-        order.id_order === id_order ? { ...order, status: newStatus } : order
-      ));
+        await axios.put(`http://localhost:5001/UpdateStatus/${id_order}`, { status: newStatus });
+        setEnproceso(sinver.map(order => 
+            order.id_order === id_order ? { ...order, status: newStatus } : order
+        ));
+
+        // Guardar el tiempo que tardó en cambiar el estado
+        const endTime = new Date();
+        const timeTaken = endTime - startTime; // Tiempo en milisegundos
+        await axios.post('http://localhost:5001/LogStatusChange', { id_order, timeTaken });
     } catch (error) {
-      console.error('Error updating status:', error);
+        console.error('Error updating status:', error);
     }
   };
   

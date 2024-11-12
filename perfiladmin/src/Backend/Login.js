@@ -33,7 +33,7 @@ const verifyToken = (req, res, next) => {
   const token = req.headers['authorization'];
   if (!token) return res.status(403).send({ auth: false, message: 'No token provided.' });
   
-  jwt.verify(token, 'SECRET_KEY', (err, decoded) => {
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
       if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
       
       req.userId = decoded.id;
@@ -524,6 +524,36 @@ app.get('/api/grafica', async (req, res) => {
 });
 
 
+
+app.post('/LogStatusChange', verifyToken, async (req, res) => {
+    const { id_order, timeTaken } = req.body;
+    const id_admin = req.userId; // Obtenemos el ID del administrador del token
+
+    try {
+        const query = `INSERT INTO status_change_log (id_order, id_admin, time_taken) VALUES ($1, $2, $3)`;
+        await pool.query(query, [id_order, id_admin, timeTaken]);
+        res.status(200).send('Tiempo registrado correctamente');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+});
+
+app.get('/MonitoreoAdministradores', async (req, res) => {
+    try {
+        const query = `
+            SELECT a.id_admin, a.name, AVG(s.time_taken) as avg_time
+            FROM administrator a
+            LEFT JOIN status_change_log s ON a.id_admin = s.id_admin
+            GROUP BY a.id_admin
+        `;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error en el servidor');
+    }
+});
 
 // Iniciar el servidor
 app.listen(5001, () => {

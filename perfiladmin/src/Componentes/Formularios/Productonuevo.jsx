@@ -9,6 +9,7 @@ function Productonuevo() {
   const [category, setCategory] = useState('');
   const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]); // Estado para almacenar las categorías
+  const [errors, setErrors] = useState({}); // Estado para manejar errores
 
   useEffect(() => {
     // Carga las categorías al montar el componente
@@ -30,6 +31,23 @@ function Productonuevo() {
 
   const handleSubmitt = async (e) => {
     e.preventDefault();
+    const newErrors = {};
+
+    // Validaciones
+    if (weight <= 0) {
+      newErrors.weight = 'El peso debe ser un valor positivo en gramos.';
+    }
+
+    if (price <= 0) {
+      newErrors.price = 'El precio debe ser un valor positivo.';
+    }
+
+    setErrors(newErrors);
+
+    // Si hay errores, no continuar con el envío
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
 
     const formData = new FormData();
     formData.append('name', name);
@@ -66,11 +84,24 @@ function Productonuevo() {
         <Form.Label style={{color: 'white'}}>Descripción:</Form.Label>
         <Form.Control type="text" placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)} />
 
-        <Form.Label style={{color: 'white'}}>Peso:</Form.Label>
-        <Form.Control type="number" placeholder="Peso" value={weight} onChange={(e) => setWeight(e.target.value)} />
+        <Form.Label style={{color: 'white'}}>Peso (en gramos):</Form.Label>
+        <Form.Control 
+          type="number" 
+          placeholder="Peso" 
+          value={weight} 
+          onChange={(e) => setWeight(e.target.value)} 
+        />
+        {errors.weight && <div style={{color: 'red'}}>{errors.weight}</div>}
 
         <Form.Label style={{color: 'white'}}>Precio (Q):</Form.Label>
-        <Form.Control type="number" step="0.01" placeholder="0.00" value={price} onChange={(e) => setPrice(e.target.value)} />
+        <Form.Control 
+          type="number" 
+          step="0.01" 
+          placeholder="0.00" 
+          value={price} 
+          onChange={(e) => setPrice(e.target.value)} 
+        />
+        {errors.price && <div style={{color: 'red'}}>{errors.price}</div>}
 
         <Form.Label style={{color: 'white'}}>Categoría:</Form.Label>
         <Form.Control as="select" value={category} onChange={(e) => setCategory(e.target.value)}> 
