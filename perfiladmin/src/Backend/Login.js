@@ -134,7 +134,7 @@ app.get('/Administradores.js', async ( req,res) => {
 app.get('/Enproceso.js', async (req, res) => {
   try {
     const query = `SELECT O.id_order,O.status,O.comment,O.date,O.total_price,C.name 
-    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='En proceso'`;
+    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='en proceso'`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -146,7 +146,7 @@ app.get('/Enproceso.js', async (req, res) => {
 app.get('/Entregados.js', async (req, res) => {
   try {
     const query = `SELECT O.id_order,O.status,O.comment,O.date,O.total_price,C.name 
-    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='Entregados'`;
+    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='entregado'`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -524,7 +524,6 @@ app.get('/api/grafica', async (req, res) => {
 });
 
 
-
 app.post('/LogStatusChange', verifyToken, async (req, res) => {
     const { id_order, timeTaken } = req.body;
     const id_admin = req.userId; // Obtenemos el ID del administrador del token
@@ -553,6 +552,104 @@ app.get('/MonitoreoAdministradores', async (req, res) => {
         console.error(err);
         res.status(500).send('Error en el servidor');
     }
+});
+
+// Endpoint para agregar un nuevo municipio
+app.post('/api/municipios', async (req, res) => {
+  const { nombre_municipio } = req.body; // Asegúrate de que el nombre del campo coincida
+
+  try {
+    const query = `INSERT INTO municipio (nombre_municipio) VALUES ($1) RETURNING *`;
+    const result = await pool.query(query, [nombre_municipio]);
+
+    if (result.rowCount > 0) {
+      res.status(201).json(result.rows[0]); // Devuelve el nuevo municipio agregado
+    } else {
+      res.status(500).send('Error al agregar municipio.');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+// Endpoint para agregar una nueva zona
+app.post('/api/zonas', async (req, res) => {
+  const { nombre_zona } = req.body; // Asegúrate de que el nombre del campo coincida
+
+  try {
+    const query = `INSERT INTO zona (nombre_zona) VALUES ($1) RETURNING *`;
+    const result = await pool.query(query, [nombre_zona]);
+
+    if (result.rowCount > 0) {
+      res.status(201).json(result.rows[0]); // Devuelve la nueva zona agregada
+    } else {
+      res.status(500).send('Error al agregar zona.');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+// Endpoint para obtener todos los municipios
+app.get('/api/municipios', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM municipio'); // Obtener todos los municipios
+    res.json(result.rows); // Devuelve los municipios
+  } catch (error) {
+    console.error('Error al obtener municipios:', error);
+    res.status(500).json({ error: 'Error al obtener municipios' });
+  }
+});
+
+// Endpoint para obtener todas las zonas
+app.get('/api/zonas', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM zona'); // Obtener todas las zonas
+    res.json(result.rows); // Devuelve las zonas
+  } catch (error) {
+    console.error('Error al obtener zonas:', error);
+    res.status(500).json({ error: 'Error al obtener zonas' });
+  }
+});
+
+// Endpoint para eliminar un municipio
+app.delete('/api/municipios/:id', async (req, res) => {
+  const { id } = req.params; // Obtener el ID del municipio a eliminar
+
+  try {
+    const query = `DELETE FROM municipio WHERE id_municipio = $1`;
+    const result = await pool.query(query, [id]);
+
+    if (result.rowCount > 0) {
+      res.status(200).send('Municipio eliminado correctamente');
+    } else {
+      res.status(404).send('Municipio no encontrado');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+// Endpoint para eliminar una zona
+app.delete('/api/zonas/:id', async (req, res) => {
+  const { id } = req.params; // Obtener el ID de la zona a eliminar
+
+  try {
+    const query = `DELETE FROM zona WHERE id_zona = $1`;
+    const result = await pool.query(query, [id]);
+
+    if (result.rowCount > 0) {
+      res.status(200).send('Zona eliminada correctamente');
+    } else {
+      res.status(404).send('Zona no encontrada');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
 });
 
 // Iniciar el servidor

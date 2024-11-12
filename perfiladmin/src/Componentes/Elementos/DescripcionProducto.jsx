@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form } from 'react-bootstrap'; 
+import { Button, Form, Modal } from 'react-bootstrap'; 
 import './Header.css'; 
 
 const DescripcionProducto = ({ product }) => {
@@ -12,15 +12,16 @@ const DescripcionProducto = ({ product }) => {
   const [image, setImage] = useState(null); 
   const [imagePreview, setImagePreview] = useState(`http://localhost:5001/uploads/${product.image}`);
   const [changeImage, setChangeImage] = useState(false);
-  const [categories, setCategories] = useState([]); // Estado para almacenar las categorías
+  const [categories, setCategories] = useState([]); 
+  const [showModal, setShowModal] = useState(false); // Estado para controlar el modal
+  const [modalMessage, setModalMessage] = useState(''); // Mensaje del modal
 
   useEffect(() => {
-    // Carga las categorías al montar el componente
     const fetchCategories = async () => {
       try {
         const response = await fetch('http://localhost:5001/listarcategories');
         const data = await response.json();
-        setCategories(data); // Almacena las categorías en el estado
+        setCategories(data);
       } catch (error) {
         console.error('Error al cargar categorías:', error);
       }
@@ -56,12 +57,30 @@ const DescripcionProducto = ({ product }) => {
       });
 
       if (response.ok) {
-        alert('Producto actualizado correctamente');
+        setModalMessage('Producto actualizado correctamente');
       } else {
-        alert('Error al actualizar el producto');
+        setModalMessage('Error al actualizar el producto');
       }
+      setShowModal(true); // Mostrar el modal
     } catch (error) {
-      alert('Error en el servidor');
+      setModalMessage('Error en el servidor');
+      setShowModal(true); // Mostrar el modal
+    }
+  };
+
+  // Función para manejar cambios en el peso
+  const handleWeightChange = (e) => {
+    const value = e.target.value;
+    if (value === '' || value >= 0) {
+      setWeight(value);
+    }
+  };
+
+  // Función para manejar cambios en el precio
+  const handlePriceChange = (e) => {
+    const value = e.target.value;
+    if (value === '' || value >= 0) {
+      setPrice(value);
     }
   };
 
@@ -74,7 +93,7 @@ const DescripcionProducto = ({ product }) => {
       <div className="detalle-producto-info"> 
         <div className="cantidad-selector mb-3"> 
           <Form onSubmit={handleSubmit}>
-            <h1>Editar Producto</h1>
+            <h2>Editar Producto</h2>
             <Form.Group controlId="formBasicText">
               <Form.Label>Nombre:</Form.Label>
               <Form.Control type="text" placeholder="Nombre" value={name}
@@ -86,11 +105,11 @@ const DescripcionProducto = ({ product }) => {
               
               <Form.Label>Peso:</Form.Label>
               <Form.Control type="number" placeholder="Peso" value={weight}
-                onChange={(e) => setWeight(e.target.value)} /> 
+                onChange={handleWeightChange} /> 
               
               <Form.Label>Precio(Q):</Form.Label>
               <Form.Control type="number" step="0.01" placeholder="0.00" value={price}
-                onChange={(e) => setPrice(e.target.value)} /> 
+                onChange={handlePriceChange} /> 
               
               <Form.Label>Categoría:</Form.Label>
               <Form.Control as="select" value={category} onChange={(e) => setCategory(e.target.value)}>
@@ -131,6 +150,19 @@ const DescripcionProducto = ({ product }) => {
           </Form>  
         </div> 
       </div> 
+
+      {/* Modal para mostrar mensajes */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Mensaje</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -1,10 +1,10 @@
-// PieChart.js o Grafico.js
 import React, { useEffect, useState } from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
+import '../Estilo.css';
 
 // Registrar los elementos de Chart.js
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const getRandomColor = () => {
   const letters = '0123456789ABCDEF';
@@ -60,24 +60,46 @@ const Grafico = () => {
     fetchData();
   }, []);
 
-  // Opciones para hacer el gráfico más pequeño y ajustar el tamaño de las etiquetas
+  // Opciones para los gráficos
   const options = {
     plugins: {
       legend: {
         labels: {
+          color: 'white', // Cambia el color del texto de la leyenda a blanco
           font: {
             size: 16 // Aumenta el tamaño de la fuente de las etiquetas
           }
         }
+      },
+      tooltip: {
+        titleColor: 'white', // Cambia el color del texto del título del tooltip a blanco
+        bodyColor: 'white' // Cambia el color del texto del cuerpo del tooltip a blanco
       }
     },
-    maintainAspectRatio: false, // Permite controlar el tamaño con CSS
+    scales: {
+      x: {
+        ticks: {
+          color: 'white' // Cambia el color de las etiquetas del eje X a blanco
+        }
+      },
+      y: {
+        ticks: {
+          color: 'white' // Cambia el color de las etiquetas del eje Y a blanco
+        }
+      }
+    },
+    maintainAspectRatio: false // Permite controlar el tamaño con CSS
   };
 
   return (
-    <div style={{ width: '300px', height: '300px', margin: '0 auto' }}>
-      <h2>Productos Más Ordenados</h2>
-      <Pie data={chartData} options={options} />
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '20px', flexWrap: 'wrap' }}>
+      <h2 className="titulo-historial" style={{ marginRight: '20px', width: '100%' }}>Productos más Vendidos</h2>
+      <div style={{ width: '300px', height: '300px', marginRight: '20px' }}>
+        <Pie data={chartData} options={options} />
+      </div>
+      <div style={{ width: '300px', height: '300px' }}>
+        <Bar data={chartData} options={options} />
+      </div>
     </div>
   );
 };

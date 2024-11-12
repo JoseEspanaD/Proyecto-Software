@@ -47,18 +47,18 @@ const FiltroPedidos = ({ show, handleClose, handleSort, selectedOption }) => {
           {selectedOption === 'sinVer' && <FaCheck className="check-icon" />}
         </button>
         <button
-          className={`filtro-opcion ${selectedOption === 'pendientes' ? 'selected' : ''}`}
-          onClick={() => handleSort('pendientes')}
-        >
-          <span className="filtro-texto">Pedidos pendientes</span>
-          {selectedOption === 'pendientes' && <FaCheck className="check-icon" />}
-        </button>
-        <button
           className={`filtro-opcion ${selectedOption === 'enProceso' ? 'selected' : ''}`}
           onClick={() => handleSort('enProceso')}
         >
           <span className="filtro-texto">Pedidos en proceso</span>
           {selectedOption === 'enProceso' && <FaCheck className="check-icon" />}
+        </button>
+        <button
+          className={`filtro-opcion ${selectedOption === 'entregados' ? 'selected' : ''}`}
+          onClick={() => handleSort('entregados')}
+        >
+          <span className="filtro-texto">Pedidos entregados</span>
+          {selectedOption === 'entregados' && <FaCheck className="check-icon" />}
         </button>
       </Modal.Body>
     </Modal>

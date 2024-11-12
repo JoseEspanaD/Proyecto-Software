@@ -9,40 +9,55 @@
   padding: 15px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   margin: 0; /* Elimina cualquier margen */
+  transition: background-color 0.3s; /* Transición suave para el cambio de color */
 }
 
-  
-  .sidebar h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    justify-content: center;    /* Centrar el contenido horizontalmente */
-  align-items: center;   
-  }
-  .sidebar h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    justify-content: center;    /* Centrar el contenido horizontalmente */
-  align-items: center;   
-  }
-  
-  .sidebar ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .sidebar ul li {
-    margin: 15px 0;
-    cursor: pointer;
-  }
-  
-  .sidebar ul li:hover {
-    text-decoration: underline;
-  }
-  .linea-divisoria {
-    border: none;         /* Quita el estilo predeterminado */
-    height: px;          /* Define el grosor de la línea */
-    background-color: #000;  /* Cambia el color de la línea (puedes usar el color que prefieras) */
-    margin: 20px 0;       /* Ajusta el espacio superior e inferior */
-  }
-  
+.sidebar img {
+  border-radius: 15%; /* Bordes redondos para la imagen del logo */
+  width: 100%; /* Asegura que la imagen se ajuste al contenedor */
+  height: auto; /* Mantiene la proporción de la imagen */
+}
+
+.sidebar h2, .sidebar h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center; /* Centrar el contenido horizontalmente */
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 20px 0; /* Aumenta el margen para separar más las opciones */
+  cursor: pointer;
+  padding: 10px; /* Añadir padding para mejorar la área clickeable */
+  border-radius: 5px; /* Bordes redondeados para los elementos de la lista */
+  transition: color 0.3s; /* Transición suave para el cambio de color */
+}
+
+.sidebar ul li:hover {
+  text-decoration: underline;
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo claro al pasar el mouse */
+}
+
+/* Estilo para el elemento activo */
+.sidebar .active {
+  color: #004d00; /* Color verde oscuro para el texto activo */
+  font-weight: bold; /* Opcional: hacer el texto en negrita para destacarlo */
+}
+
+/* Asegúrate de que el color de texto por defecto sea blanco */
+.sidebar .text-white {
+  color: white; /* Color blanco para el texto por defecto */
+}
+
+.linea-divisoria {
+  border: none; /* Quita el estilo predeterminado */
+  height: 2px; /* Define el grosor de la línea */
+  background-color: #000; /* Cambia el color de la línea */
+  margin: 20px 0; /* Ajusta el espacio superior e inferior */
+}
+
   

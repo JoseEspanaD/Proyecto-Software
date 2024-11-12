@@ -19,8 +19,8 @@ function Sinver() {
   const handleStatusChange = async (id_order, newStatus) => {
     const currentOrder = sinver.find(order => order.id_order === id_order);
     const validTransitions = {
-        'sin ver': 'En proceso',
-        'En proceso': 'Entregados'
+        'sin ver': 'en proceso',
+        'en proceso': 'entregado'
     };
 
     if (validTransitions[currentOrder.status] !== newStatus) {
@@ -49,7 +49,7 @@ function Sinver() {
         
          
         <Container> 
-            <h1 className="mb-4" style={{color: 'white'}} >Sin Ver</h1>
+            <h3 className="titulo-historial-opciones">Carrito de Compras</h3>
       <Table striped bordered hover className="table table-dark">
       <thead>
         <tr>
@@ -78,8 +78,8 @@ function Sinver() {
                     Cambiar Estatus
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'En proceso')}>En proceso</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'Entregados')}>Entregados</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'en proceso')}>En proceso</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'entregado')}>Entregados</Dropdown.Item>
                     <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'sin ver')}>Sin ver</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

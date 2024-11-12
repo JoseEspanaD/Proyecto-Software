@@ -62,6 +62,8 @@ const HistorialPedidos = () => {
       sortedPedidos = [...pedidosOriginales].sort((a, b) => a.total_price - b.total_price);
     } else if (order === 'precioDesc') {
       sortedPedidos = [...pedidosOriginales].sort((a, b) => b.total_price - a.total_price);
+    } else if (order === 'entregados') {
+      sortedPedidos = pedidosOriginales.filter(pedido => pedido.status === 'entregado');
     }
     
     if (sortedPedidos.length > 0) {

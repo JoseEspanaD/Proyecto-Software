@@ -149,7 +149,7 @@ app.get('/api/orders', verifyToken, async (req, res) => {
     }
 });
 
-// Añade esta nueva ruta después de las rutas existentes
+// Ruta para obtener los datos del usuario
 app.get('/api/user', verifyToken, async (req, res) => {
     try {
         const result = await pool.query(`
@@ -158,6 +158,8 @@ app.get('/api/user', verifyToken, async (req, res) => {
                 c.e_mail, 
                 c.address, 
                 c.phone, 
+                c.id_municipio, 
+                c.id_zona,
                 m.nombre_municipio AS municipio, 
                 z.nombre_zona AS zona 
             FROM 
@@ -174,7 +176,7 @@ app.get('/api/user', verifyToken, async (req, res) => {
             res.status(404).json({ error: 'Usuario no encontrado' });
         }
     } catch (error) {
-        console.error('Error al obtener datos del usuario:', error.message); // Log más específico
+        console.error('Error al obtener datos del usuario:', error.message);
         res.status(500).json({ error: 'Error al obtener datos del usuario', details: error.message });
     }
 });
@@ -209,11 +211,11 @@ app.get('/api/categories', async (req, res) => {
 
 // Ruta para actualizar los datos del usuario
 app.put('/api/user', verifyToken, async (req, res) => {
-    const { name, e_mail, address, phone, municipio, zona } = req.body;
+    const { name, e_mail, address, phone, id_municipio, id_zona } = req.body;
     try {
         await pool.query(
             'UPDATE customer SET name = $1, e_mail = $2, address = $3, phone = $4, id_municipio = $5, id_zona = $6 WHERE id_customer = $7',
-            [name, e_mail, address, phone, municipio, zona, req.userId]
+            [name, e_mail, address, phone, id_municipio, id_zona, req.userId]
         );
         res.status(200).json({ message: 'Datos actualizados con éxito' });
     } catch (error) {

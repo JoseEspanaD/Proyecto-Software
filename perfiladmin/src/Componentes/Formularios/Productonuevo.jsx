@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Modal } from 'react-bootstrap';
 
 function Productonuevo() {
   const [name, setName] = useState('');
@@ -10,6 +10,7 @@ function Productonuevo() {
   const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]); // Estado para almacenar las categorías
   const [errors, setErrors] = useState({}); // Estado para manejar errores
+  const [showModal, setShowModal] = useState(false); // Estado para controlar el Modal
 
   useEffect(() => {
     // Carga las categorías al montar el componente
@@ -29,13 +30,16 @@ function Productonuevo() {
     setImage(e.target.files[0]);
   };
 
+  const handleClose = () => setShowModal(false); // Función para cerrar el Modal
+  const handleShow = () => setShowModal(true); // Función para mostrar el Modal
+
   const handleSubmitt = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
     // Validaciones
     if (weight <= 0) {
-      newErrors.weight = 'El peso debe ser un valor positivo en gramos.';
+      newErrors.weight = 'El peso debe ser un valor positivo.';
     }
 
     if (price <= 0) {
@@ -64,7 +68,7 @@ function Productonuevo() {
       });
 
       if (response.ok) {
-        alert('Nuevo Producto!');
+        handleShow(); // Mostrar el Modal en caso de éxito
       } else {
         alert('Error en el registro');
       }
@@ -75,36 +79,37 @@ function Productonuevo() {
   };
 
   return (
-    <Form onSubmit={handleSubmitt}>
-      <h1 className="mb-4" style={{color: 'white'}} >Nuevo Producto</h1>
-      <Form.Group controlId="formBasicText">
-        <Form.Label style={{color: 'white'}}>Nombre:</Form.Label>
-        <Form.Control type="text" placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
+    <>
+      <Form onSubmit={handleSubmitt}>
+        <h2 className="titulo-historial">Registrar Nuevo Producto</h2>
+        <Form.Group controlId="formBasicText">
+          <Form.Label style={{color: 'white'}}>Nombre:</Form.Label>
+          <Form.Control type="text" placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
 
-        <Form.Label style={{color: 'white'}}>Descripción:</Form.Label>
-        <Form.Control type="text" placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <Form.Label style={{color: 'white'}}>Descripción:</Form.Label>
+          <Form.Control type="text" placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)} />
 
-        <Form.Label style={{color: 'white'}}>Peso (en gramos):</Form.Label>
-        <Form.Control 
-          type="number" 
-          placeholder="Peso" 
-          value={weight} 
-          onChange={(e) => setWeight(e.target.value)} 
-        />
-        {errors.weight && <div style={{color: 'red'}}>{errors.weight}</div>}
+          <Form.Label style={{color: 'white'}}>Peso (en gramos):</Form.Label>
+          <Form.Control 
+            type="number" 
+            placeholder="125" 
+            value={weight} 
+            onChange={(e) => setWeight(e.target.value)} 
+          />
+          {errors.weight && <div style={{color: 'red'}}>{errors.weight}</div>}
 
-        <Form.Label style={{color: 'white'}}>Precio (Q):</Form.Label>
-        <Form.Control 
-          type="number" 
-          step="0.01" 
-          placeholder="0.00" 
-          value={price} 
-          onChange={(e) => setPrice(e.target.value)} 
-        />
-        {errors.price && <div style={{color: 'red'}}>{errors.price}</div>}
+          <Form.Label style={{color: 'white'}}>Precio (Q):</Form.Label>
+          <Form.Control 
+            type="number" 
+            step="0.01" 
+            placeholder="0.00" 
+            value={price} 
+            onChange={(e) => setPrice(e.target.value)} 
+          />
+          {errors.price && <div style={{color: 'red'}}>{errors.price}</div>}
 
-        <Form.Label style={{color: 'white'}}>Categoría:</Form.Label>
-        <Form.Control as="select" value={category} onChange={(e) => setCategory(e.target.value)}> 
+          <Form.Label style={{color: 'white'}}>Categoría:</Form.Label>
+          <Form.Control as="select" value={category} onChange={(e) => setCategory(e.target.value)}> 
   <option value="">Selecciona una categoría</option>
   {categories.map((cat) => (
     <option key={cat.category} value={cat.category}>
@@ -114,14 +119,28 @@ function Productonuevo() {
 </Form.Control>
 
 
-        <Form.Label style={{color: 'white'}}>Imagen:</Form.Label>
-        <Form.Control type="file" onChange={handleImageChange} />
-      </Form.Group>
+          <Form.Label style={{color: 'white'}}>Imagen:</Form.Label>
+          <Form.Control type="file" onChange={handleImageChange} />
+        </Form.Group>
 
-      <Button variant="outline-danger" type="submit" className="mt-3">
-        Registrar
-      </Button>
-    </Form>
+        <Button variant="outline-danger" type="submit" className="mt-3">
+          Registrar
+        </Button>
+      </Form>
+
+      {/* Modal para mostrar el mensaje de éxito */}
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Éxito</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Se ha registrado correctamente el nuevo producto!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
 

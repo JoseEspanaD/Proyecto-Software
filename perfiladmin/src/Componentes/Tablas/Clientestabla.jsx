@@ -30,7 +30,7 @@ function Clientestabla() {
         
          
       <Container> 
-            <h1 className="mb-4" style={{color: 'white'}}>Clientes Registrados</h1>
+            <h2 className="titulo-historial">Clientes Registrados</h2>
       <Table striped bordered hover className="table table-dark">
       <thead>
         <tr>

@@ -73,114 +73,114 @@ const Clientenuevo = () => {
 
     return ( 
              
-                    <>
-                        <h2 className="text-center mb-4" style={{ color: 'white' }}>Registro de Nuevo Cliente</h2>
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Group className="mb-3" controlId="formName">
-                                <Form.Label style={{ color: 'white' }}>Nombre Completo:</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
+        <>
+            <h2 className="titulo-historial">Registrar Nuevo Cliente</h2>
+            <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="formName">
+                    <Form.Label style={{ color: 'white' }}>Nombre Completo:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formEmail">
-                                <Form.Label style={{ color: 'white' }}>Email:</Form.Label>
-                                <Form.Control
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
+                <Form.Group className="mb-3" controlId="formEmail">
+                    <Form.Label style={{ color: 'white' }}>Email:</Form.Label>
+                    <Form.Control
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formPassword">
-                                <Form.Label style={{ color: 'white' }}>Contraseña:</Form.Label>
-                                <Form.Control
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
+                <Form.Group className="mb-3" controlId="formPassword">
+                    <Form.Label style={{ color: 'white' }}>Contraseña:</Form.Label>
+                    <Form.Control
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formConfirmPassword">
-                                <Form.Label style={{ color: 'white' }}>Confirmar Contraseña:</Form.Label>
-                                <Form.Control
-                                    type="password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
+                <Form.Group className="mb-3" controlId="formConfirmPassword">
+                    <Form.Label style={{ color: 'white' }}>Confirmar Contraseña:</Form.Label>
+                    <Form.Control
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                    />
+                </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formAddress">
-                                <Form.Label style={{ color: 'white' }}>Dirección:</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
+                <Form.Group className="mb-3" controlId="formAddress">
+                    <Form.Label style={{ color: 'white' }}>Dirección:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        required
+                    />
+                </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formPhone">
-                                <Form.Label style={{ color: 'white' }}>Teléfono:</Form.Label>
-                                <Form.Control
-                                    type="tel"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
+                <Form.Group className="mb-3" controlId="formPhone">
+                    <Form.Label style={{ color: 'white' }}>Teléfono:</Form.Label>
+                    <Form.Control
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                    />
+                </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formMunicipio">
-                                <Form.Label style={{ color: 'white' }}>Municipio:</Form.Label>
-                                <Form.Select
-                                    value={municipio}
-                                    onChange={(e) => setMunicipio(e.target.value)}
-                                    required
-                                >
-                                    <option value="">Seleccione un municipio</option>
-                                    {municipios.length > 0 ? (
-                                        municipios.map((mun) => (
-                                            <option key={mun.id_municipio} value={mun.id_municipio}>{mun.nombre_municipio}</option>
-                                        ))
-                                    ) : (
-                                        <option value="" disabled>No hay municipios disponibles</option>
-                                    )}
-                                </Form.Select>
-                            </Form.Group>
+                <Form.Group className="mb-3" controlId="formMunicipio">
+                    <Form.Label style={{ color: 'white' }}>Municipio:</Form.Label>
+                    <Form.Select
+                        value={municipio}
+                        onChange={(e) => setMunicipio(e.target.value)}
+                        required
+                    >
+                        <option value="">Seleccione un municipio</option>
+                        {municipios.length > 0 ? (
+                            municipios.map((mun) => (
+                                <option key={mun.id_municipio} value={mun.id_municipio}>{mun.nombre_municipio}</option>
+                            ))
+                        ) : (
+                            <option value="" disabled>No hay municipios disponibles</option>
+                        )}
+                    </Form.Select>
+                </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formZona">
-                                <Form.Label style={{ color: 'white' }}>Zona:</Form.Label>
-                                <Form.Select
-                                    value={zona}
-                                    onChange={(e) => setZona(e.target.value)}
-                                    required
-                                >
-                                    <option value="">Seleccione una zona</option>
-                                    {zonas.length > 0 ? (
-                                        zonas.map((z) => (
-                                            <option key={z.id_zona} value={z.id_zona}>{z.nombre_zona}</option>
-                                        ))
-                                    ) : (
-                                        <option value="" disabled>No hay zonas disponibles</option>
-                                    )}
-                                </Form.Select>
-                            </Form.Group>
+                <Form.Group className="mb-3" controlId="formZona">
+                    <Form.Label style={{ color: 'white' }}>Zona:</Form.Label>
+                    <Form.Select
+                        value={zona}
+                        onChange={(e) => setZona(e.target.value)}
+                        required
+                    >
+                        <option value="">Seleccione una zona</option>
+                        {zonas.length > 0 ? (
+                            zonas.map((z) => (
+                                <option key={z.id_zona} value={z.id_zona}>{z.nombre_zona}</option>
+                            ))
+                        ) : (
+                            <option value="" disabled>No hay zonas disponibles</option>
+                        )}
+                    </Form.Select>
+                </Form.Group>
 
-                            <Button variant="primary" type="submit" className="w-100">
-                                Registrarse
-                            </Button>
-                            <br>
-                            </br>
-                            <br></br><br></br><br></br>
-                        </Form>
-                        {message && <Alert variant={message.includes('exitoso') ? 'success' : 'danger'} className="mt-3">{message}</Alert>}
-                    </> 
+                <Button variant="primary" type="submit" className="w-100">
+                    Registrarse
+                </Button>
+                <br>
+                </br>
+                <br></br><br></br><br></br>
+            </Form>
+            {message && <Alert variant={message.includes('exitoso') ? 'success' : 'danger'} className="mt-3">{message}</Alert>}
+        </> 
     );
 };
 

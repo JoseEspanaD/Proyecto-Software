@@ -19,7 +19,7 @@ function Admintabla() {
         
          
         <Container> 
-            <h1 className="mb-4" style={{color: 'white'}}>Administradores Registrados</h1>
+            <h2 className="titulo-historial">Administradores Registrados</h2>
         <Table striped bordered hover className="table table-dark">
       <thead>
         <tr>

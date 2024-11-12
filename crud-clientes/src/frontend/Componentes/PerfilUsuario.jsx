@@ -6,9 +6,18 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Importar Bootstrap
 const PerfilUsuario = () => {
     const [userData, setUserData] = useState({});
     const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        name: '',
+        e_mail: '',
+        address: '',
+        phone: '',
+        id_municipio: '',
+        id_zona: ''
+    });
     const [alertMessage, setAlertMessage] = useState('');
     const [alertType, setAlertType] = useState(''); // 'success' o 'danger'
+    const [municipios, setMunicipios] = useState([]); // Estado para municipios
+    const [zonas, setZonas] = useState([]); // Estado para zonas
 
     useEffect(() => {
         // Función para obtener los datos del usuario
@@ -24,7 +33,16 @@ const PerfilUsuario = () => {
             setFormData(data); // Inicializa el formulario con los datos del usuario
         };
 
+        // Función para obtener municipios y zonas
+        const fetchMunicipiosYZonas = async () => {
+            const response = await fetch('http://localhost:5000/api/municipios-y-zonas');
+            const data = await response.json();
+            setMunicipios(data.municipios);
+            setZonas(data.zonas);
+        };
+
         fetchUserData();
+        fetchMunicipiosYZonas();
     }, []);
 
     const handleEditToggle = () => {
@@ -135,9 +153,31 @@ const PerfilUsuario = () => {
                 <div className="profile-info">
                     <label>Municipio:&nbsp;&nbsp;</label>
                     {isEditing ? (
-                        <input type="text" name="municipio" value={formData.municipio} onChange={handleChange} />
+                        <select name="id_municipio" value={formData.id_municipio} onChange={handleChange}>
+                            <option value="">Seleccione un municipio</option>
+                            {municipios.map((mun) => (
+                                <option key={mun.id_municipio} value={mun.id_municipio}>
+                                    {mun.nombre_municipio}
+                                </option>
+                            ))}
+                        </select>
                     ) : (
                         <span>{userData.municipio}</span>
+                    )}
+                </div>
+                <div className="profile-info">
+                    <label>Zona:&nbsp;&nbsp;</label>
+                    {isEditing ? (
+                        <select name="id_zona" value={formData.id_zona} onChange={handleChange}>
+                            <option value="">Seleccione una zona</option>
+                            {zonas.map((z) => (
+                                <option key={z.id_zona} value={z.id_zona}>
+                                    {z.nombre_zona}
+                                </option>
+                            ))}
+                        </select>
+                    ) : (
+                        <span>{userData.zona}</span>
                     )}
                 </div>
                 <button type="button" className="btn-editar-personalizado" onClick={handleEditToggle}>

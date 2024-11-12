@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';  
 import { Table, Container } from 'react-bootstrap'; 
+import '../Estilo.css';
 function Clientestabla() {
   const [clientes, setClientes] = useState([]);
 
@@ -17,7 +18,7 @@ function Clientestabla() {
   let num = 1;
   return (
     <Container> 
-      <h1 className="mb-4" style={{color: 'white'}} >Clientes Recientes </h1>
+     <h2 className="titulo-historial">Clientes Recientes</h2>
       <Table striped bordered hover className="table table-dark">
         <thead>
           <tr>

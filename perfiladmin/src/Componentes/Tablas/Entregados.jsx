@@ -33,7 +33,7 @@ function Enproceso() {
         
          
         <Container> 
-            <h1 className="mb-4" style={{color: 'white'}}>Entregados</h1>
+            <h3 className="titulo-historial-opciones">Entregados</h3>
       <Table striped bordered hover className="table table-dark">
       <thead>
         <tr>
@@ -62,8 +62,8 @@ function Enproceso() {
                     Cambiar Estatus
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'En proceso')}>En proceso</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'Entregados')}>Entregados</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'en proceso')}>En proceso</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'entregado')}>Entregados</Dropdown.Item>
                     <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'sin ver')}>Sin ver</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
