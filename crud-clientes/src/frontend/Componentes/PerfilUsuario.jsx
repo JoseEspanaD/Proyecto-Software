@@ -9,6 +9,8 @@ const PerfilUsuario = () => {
     const [formData, setFormData] = useState({});
     const [alertMessage, setAlertMessage] = useState('');
     const [alertType, setAlertType] = useState(''); // 'success' o 'danger'
+    const [municipios, setMunicipios] = useState([]); // Para almacenar los municipios
+    const [zonas, setZonas] = useState([]); // Para almacenar las zonas
 
     useEffect(() => {
         // Función para obtener los datos del usuario
@@ -20,11 +22,22 @@ const PerfilUsuario = () => {
                 },
             });
             const data = await response.json();
+            
+            // Asegúrate de que los campos municipio y zona estén presentes
             setUserData(data);
             setFormData(data); // Inicializa el formulario con los datos del usuario
         };
 
+        // Función para obtener municipios y zonas
+        const fetchMunicipiosYZonas = async () => {
+            const response = await fetch('http://localhost:5000/api/municipios-y-zonas');
+            const data = await response.json();
+            setMunicipios(data.municipios);
+            setZonas(data.zonas);
+        };
+
         fetchUserData();
+        fetchMunicipiosYZonas();
     }, []);
 
     const handleEditToggle = () => {
@@ -103,7 +116,7 @@ const PerfilUsuario = () => {
                 <div className="profile-info">
                     <label>Nombre:&nbsp;&nbsp;</label>
                     {isEditing ? (
-                        <input type="text" name="name" value={formData.name} onChange={handleChange} />
+                        <input type="text" name="name" value={formData.name} onChange={handleChange} className="form-control" />
                     ) : (
                         <span>{userData.name}</span>
                     )}
@@ -111,7 +124,7 @@ const PerfilUsuario = () => {
                 <div className="profile-info">
                     <label>Correo:&nbsp;&nbsp;</label>
                     {isEditing ? (
-                        <input type="email" name="e_mail" value={formData.e_mail} onChange={handleChange} />
+                        <input type="email" name="e_mail" value={formData.e_mail} onChange={handleChange} className="form-control" />
                     ) : (
                         <span>{userData.e_mail}</span>
                     )}
@@ -119,7 +132,7 @@ const PerfilUsuario = () => {
                 <div className="profile-info">
                     <label>Dirección:&nbsp;&nbsp;</label>
                     {isEditing ? (
-                        <input type="text" name="address" value={formData.address} onChange={handleChange} />
+                        <input type="text" name="address" value={formData.address} onChange={handleChange} className="form-control" />
                     ) : (
                         <span>{userData.address}</span>
                     )}
@@ -127,7 +140,7 @@ const PerfilUsuario = () => {
                 <div className="profile-info">
                     <label>Teléfono:&nbsp;&nbsp;</label>
                     {isEditing ? (
-                        <input type="text" name="phone" value={formData.phone} onChange={handleChange} />
+                        <input type="text" name="phone" value={formData.phone} onChange={handleChange} className="form-control" />
                     ) : (
                         <span>{userData.phone}</span>
                     )}
@@ -135,9 +148,29 @@ const PerfilUsuario = () => {
                 <div className="profile-info">
                     <label>Municipio:&nbsp;&nbsp;</label>
                     {isEditing ? (
-                        <input type="text" name="municipio" value={formData.municipio} onChange={handleChange} />
+                        <select name="municipio" value={formData.municipio} onChange={handleChange} className="form-select">
+                            {municipios.map((mun) => (
+                                <option key={mun.id_municipio} value={mun.nombre_municipio}>
+                                    {mun.nombre_municipio}
+                                </option>
+                            ))}
+                        </select>
                     ) : (
                         <span>{userData.municipio}</span>
+                    )}
+                </div>
+                <div className="profile-info">
+                    <label>Zona:&nbsp;&nbsp;</label>
+                    {isEditing ? (
+                        <select name="zona" value={formData.zona} onChange={handleChange} className="form-select">
+                            {zonas.map((zon) => (
+                                <option key={zon.id_zona} value={zon.nombre_zona}>
+                                    {zon.nombre_zona}
+                                </option>
+                            ))}
+                        </select>
+                    ) : (
+                        <span>{userData.zona}</span>
                     )}
                 </div>
                 <button type="button" className="btn-editar-personalizado" onClick={handleEditToggle}>

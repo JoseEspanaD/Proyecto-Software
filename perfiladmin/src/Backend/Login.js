@@ -54,7 +54,13 @@ app.get('/Clientes.js', async ( req,res) => {
 
 app.get('/Clientes_recientes.js', async ( req,res) => {
   try {
-    const query = `select * from customer where status = 'active'order by id_customer DESC limit 5`;
+    const query = `
+      SELECT C.*, M.nombre_municipio, Z.nombre_zona 
+      FROM customer C
+      LEFT JOIN municipio M ON C.id_municipio = M.id_municipio
+      LEFT JOIN zona Z ON C.id_zona = Z.id_zona
+      WHERE C.status = 'active'
+      ORDER BY C.id_customer DESC LIMIT 5`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {

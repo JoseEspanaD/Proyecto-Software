@@ -152,7 +152,23 @@ app.get('/api/orders', verifyToken, async (req, res) => {
 // Añade esta nueva ruta después de las rutas existentes
 app.get('/api/user', verifyToken, async (req, res) => {
     try {
-        const result = await pool.query('SELECT name, e_mail, address, phone, id_municipio, id_zona FROM customer WHERE id_customer = $1', [req.userId]);
+        const result = await pool.query(`
+            SELECT 
+                c.name, 
+                c.e_mail, 
+                c.address, 
+                c.phone, 
+                m.nombre_municipio AS municipio, 
+                z.nombre_zona AS zona 
+            FROM 
+                customer c
+            LEFT JOIN 
+                municipio m ON c.id_municipio = m.id_municipio
+            LEFT JOIN 
+                zona z ON c.id_zona = z.id_zona
+            WHERE 
+                c.id_customer = $1`, [req.userId]);
+        
         if (result.rows.length > 0) {
             res.json(result.rows[0]);
         } else {
@@ -194,11 +210,11 @@ app.get('/api/categories', async (req, res) => {
 
 // Ruta para actualizar los datos del usuario
 app.put('/api/user', verifyToken, async (req, res) => {
-    const { name, e_mail, address, phone, municipio } = req.body;
+    const { name, e_mail, address, phone, municipio, zona } = req.body;
     try {
         await pool.query(
-            'UPDATE customer SET name = $1, e_mail = $2, address = $3, phone = $4, municipio = $5 WHERE id_customer = $6',
-            [name, e_mail, address, phone, municipio, req.userId]
+            'UPDATE customer SET name = $1, e_mail = $2, address = $3, phone = $4, id_municipio = $5, id_zona = $6 WHERE id_customer = $7',
+            [name, e_mail, address, phone, municipio, zona, req.userId]
         );
         res.status(200).json({ message: 'Datos actualizados con éxito' });
     } catch (error) {
