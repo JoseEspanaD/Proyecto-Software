@@ -42,7 +42,11 @@ const verifyToken = (req, res, next) => {
 };
 app.get('/Clientes.js', async ( req,res) => {
   try {
-    const query = `SELECT * FROM customer`;
+    const query = `SELECT C.*, M.nombre_municipio, Z.nombre_zona 
+      FROM customer C
+      LEFT JOIN municipio M ON C.id_municipio = M.id_municipio
+      LEFT JOIN zona Z ON C.id_zona = Z.id_zona
+      WHERE C.status = 'active'`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -54,7 +58,13 @@ app.get('/Clientes.js', async ( req,res) => {
 
 app.get('/Clientes_recientes.js', async ( req,res) => {
   try {
-    const query = `select * from customer where status = 'active'order by id_customer DESC limit 5`;
+    const query = `
+      SELECT C.*, M.nombre_municipio, Z.nombre_zona 
+      FROM customer C
+      LEFT JOIN municipio M ON C.id_municipio = M.id_municipio
+      LEFT JOIN zona Z ON C.id_zona = Z.id_zona
+      WHERE C.status = 'active'
+      ORDER BY C.id_customer DESC LIMIT 5`;
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -174,15 +184,15 @@ app.get('/Descripcion.js/:id_order', async (req, res) => {
 
 // Ruta para registrar un nuevo administrador
 app.post('/Registros.js', async (req, res) => {
-  const { name, password, e_mail, address,phone,municipio } = req.body;
+  const { name, password, e_mail, phone} = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);  
     const query = `
-      INSERT INTO administrator (name, e_mail, status, password, address,phone,municipio)
-      VALUES ($1, $2, 'on-line', $3, $4,$5,$6)
+      INSERT INTO administrator (name, e_mail, status, password, phone)
+      VALUES ($1, $2, 'on-line', $3, $4)
     `;
-    const result = await pool.query(query, [name, e_mail, hashedPassword, address,phone,municipio]);
+    const result = await pool.query(query, [name, e_mail, hashedPassword,phone]);
 
     if (result.rowCount > 0) {
       res.status(200).send('Registro exitoso!');
@@ -196,27 +206,38 @@ app.post('/Registros.js', async (req, res) => {
 });
 
 app.post('/Registros_clientes.js', async (req, res) => {
-  const { name, password, e_mail, address,phone,municipio } = req.body;
+  const { name, e_mail, password, address, phone, id_municipio, id_zona } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10); // Encriptar la contraseña
-    const query = `
-      INSERT INTO customer (name, e_mail, status, password, address,phone,municipio)
-      VALUES ($1, $2, 'active', $3, $4,$5,$6)
-    `;
-    const result = await pool.query(query, [name, e_mail, hashedPassword, address,phone,municipio]);
+      // Verificar si el email ya está registrado
+      const emailCheck = await pool.query('SELECT * FROM customer WHERE e_mail = $1', [e_mail]);
+      if (emailCheck.rows.length > 0) {
+          return res.status(400).json({ error: 'El email ya está registrado' });
+      }
 
-    if (result.rowCount > 0) {
-      res.status(200).send('Registro exitoso!');
-    } else {
-      res.status(500).send('Error al registrar.');
-    }
+      // Encriptar la contraseña
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Insertar el nuevo cliente
+      const query = `
+          INSERT INTO customer (name, e_mail, status, password, address, phone, id_municipio, id_zona)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          RETURNING id_customer
+      `;
+      const values = [name, e_mail, 'active', hashedPassword, address, phone.toString(), id_municipio, id_zona];
+      const result = await pool.query(query, values);
+
+      const newUserId = result.rows[0].id_customer;
+
+      // Generar un token JWT para el nuevo usuario
+      const token = jwt.sign({ id: newUserId, e_mail }, 'SECRET_KEY', { expiresIn: '1h' });
+
+      res.status(201).json({ message: 'Cliente registrado con éxito', token, userId: newUserId });
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Error en el servidor');
+      console.error('Error al registrar el cliente:', err);
+      res.status(500).json({ error: 'Error al registrar el cliente', details: err.message });
   }
 });
-
 //Buscar categorias para el navbar
 // Endpoint en el backend para obtener las categorías
 // server.js
@@ -454,71 +475,55 @@ app.put('/UpdateStatus/:id_order', async (req, res) => {
   }
 });
 
-// Rutas para municipios
-app.get('/api/municipios', async (req, res) => {
+
+app.put('/UpdateStatusclientes/:id_customer', async (req, res) => {
+  const { id_customer } = req.params;
+  const { status } = req.body;
   try {
-    const result = await pool.query('SELECT * FROM municipio');
+    const query = `UPDATE customer SET status = $1 WHERE id_customer = $2`;
+    const result = await pool.query(query, [status, id_customer]);
+    if (result.rowCount > 0) {
+      res.status(200).send('Estatus actualizado correctamente');
+    } else {
+      res.status(404).send('Pedido no encontrado');
+    }
+  } catch (err) {
+    console.error('Error en el servidor:', err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+
+// Nueva ruta para obtener municipios y zonas
+app.get('/api/municipios-y-zonas', async (req, res) => {
+  try {
+      const municipios = await pool.query('SELECT * FROM municipio'); // Obtener municipios
+      const zonas = await pool.query('SELECT * FROM zona'); // Obtener zonas
+      res.json({ municipios: municipios.rows, zonas: zonas.rows });
+  } catch (error) {
+      console.error('Error al obtener municipios y zonas:', error);
+      res.status(500).json({ error: 'Error al obtener municipios y zonas' });
+  }
+});
+// Endpoint para obtener los productos más ordenados
+app.get('/api/grafica', async (req, res) => {
+  try {
+    const query = `
+      SELECT P.name, COUNT(I.id_product) AS veces_ordenado
+      FROM order_item I
+      JOIN product P ON I.id_product = P.id_product
+      GROUP BY P.name
+      ORDER BY veces_ordenado DESC;
+    `;
+    const result = await pool.query(query);
     res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error en el servidor');
+  } catch (error) {
+    console.error('Error al ejecutar la consulta', error);
+    res.status(500).json({ error: 'Error en el servidor' });
   }
 });
 
-app.post('/api/municipios', async (req, res) => {
-  const { nombre_municipio } = req.body;
-  try {
-    const result = await pool.query('INSERT INTO municipio (nombre_municipio) VALUES ($1)', [nombre_municipio]);
-    res.status(201).send('Municipio agregado');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error en el servidor');
-  }
-});
 
-app.delete('/api/municipios/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    await pool.query('DELETE FROM municipio WHERE id_municipio = $1', [id]);
-    res.send('Municipio eliminado');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error en el servidor');
-  }
-});
-
-// Rutas para zonas
-app.get('/api/zonas', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM zona');
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error en el servidor');
-  }
-});
-
-app.post('/api/zonas', async (req, res) => {
-  const { nombre_zona } = req.body;
-  try {
-    const result = await pool.query('INSERT INTO zona (nombre_zona) VALUES ($1)', [nombre_zona]);
-    res.status(201).send('Zona agregada');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error en el servidor');
-  }
-});
-
-app.delete('/api/zonas/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    await pool.query('DELETE FROM zona WHERE id_zona = $1', [id]);
-    res.send('Zona eliminada');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error en el servidor');
-  }
-});
 
 // Iniciar el servidor
 app.listen(5001, () => {

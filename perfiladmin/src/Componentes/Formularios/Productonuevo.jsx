@@ -14,7 +14,7 @@ function Productonuevo() {
     // Carga las categorías al montar el componente
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/categories');
+        const response = await fetch('http://localhost:5001/Categorias_table');
         const data = await response.json();
         setCategories(data); // Almacena las categorías en el estado
       } catch (error) {

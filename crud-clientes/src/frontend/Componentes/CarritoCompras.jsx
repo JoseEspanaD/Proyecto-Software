@@ -3,6 +3,7 @@ import { Table, Button, InputGroup, FormControl } from 'react-bootstrap';
 import { FaTrash, FaPlus, FaMinus, FaShoppingCart } from 'react-icons/fa';
 import './StylesComponent.css';
 
+
 const CarritoCompras = ({ onProcederPedido }) => {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
@@ -62,7 +63,7 @@ const CarritoCompras = ({ onProcederPedido }) => {
               {cartItems.map((item) => (
                 <tr key={item.id}>
                   <td>
-                    <img src={`http://localhost:5001/uploads/${item.image}`} alt={item.name} style={{width: '50px', marginRight: '10px'}} />
+                  <img src={`http://localhost:5001/uploads/${item.image}`} alt={item.name} style={{width: '50px', marginRight: '10px'}} />
                     {item.name}
                   </td>
                   <td>
@@ -74,8 +75,8 @@ const CarritoCompras = ({ onProcederPedido }) => {
                         type="number"
                         value={item.quantity}
                         onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
-                        min="1"
                         max={MAX_QUANTITY}
+                        min="1"
                         className="text-center"
                       />
                       <Button variant="outline-secondary" onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>

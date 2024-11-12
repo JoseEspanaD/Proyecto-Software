@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button, Form, ListGroup, Modal, Alert } from 'react-bootstrap';
-
 function ZonasMunicipios() {
   const [municipios, setMunicipios] = useState([]);
   const [zonas, setZonas] = useState([]);
@@ -9,12 +8,10 @@ function ZonasMunicipios() {
   const [showMunicipios, setShowMunicipios] = useState(false);
   const [showZonas, setShowZonas] = useState(false);
   const [mensaje, setMensaje] = useState('');
-
   useEffect(() => {
     fetchMunicipios();
     fetchZonas();
   }, []);
-
   const fetchMunicipios = async () => {
     try {
       const response = await fetch('http://localhost:5001/api/municipios'); // Asegúrate de tener esta ruta en tu backend
@@ -24,7 +21,6 @@ function ZonasMunicipios() {
       console.error('Error al cargar municipios:', error);
     }
   };
-
   const fetchZonas = async () => {
     try {
       const response = await fetch('http://localhost:5001/api/zonas'); // Asegúrate de que esta ruta sea correcta
@@ -34,7 +30,6 @@ function ZonasMunicipios() {
       console.error('Error al cargar zonas:', error);
     }
   };
-
   const agregarMunicipio = async () => {
     try {
       await fetch('http://localhost:5001/api/municipios', {
@@ -52,7 +47,6 @@ function ZonasMunicipios() {
       console.error('Error al agregar municipio:', error);
     }
   };
-
   const eliminarMunicipio = async (id) => {
     try {
       await fetch(`http://localhost:5001/api/municipios/${id}`, {
@@ -65,7 +59,6 @@ function ZonasMunicipios() {
       console.error('Error al eliminar municipio:', error);
     }
   };
-
   const agregarZona = async () => {
     try {
       await fetch('http://localhost:5001/api/zonas', {
@@ -83,7 +76,6 @@ function ZonasMunicipios() {
       console.error('Error al agregar zona:', error);
     }
   };
-
   const eliminarZona = async (id) => {
     try {
       await fetch(`http://localhost:5001/api/zonas/${id}`, {
@@ -96,7 +88,6 @@ function ZonasMunicipios() {
       console.error('Error al eliminar zona:', error);
     }
   };
-
   return (
     <Container>
       <h1 className="mb-4" style={{color: 'white'}} >Gestión de Cobertura</h1>
@@ -113,7 +104,6 @@ function ZonasMunicipios() {
           <Button variant="primary" onClick={agregarMunicipio} className="me-2">Agregar</Button>
           <Button variant="info" onClick={() => setShowMunicipios(true)}>Ver Municipios</Button>
         </Form.Group>
-
         <Form.Group controlId="formNuevaZona">
           <Form.Label style={{color: 'white'}}>Agregar Zona</Form.Label>
           <Form.Control
@@ -126,7 +116,6 @@ function ZonasMunicipios() {
           <Button variant="info" onClick={() => setShowZonas(true)}>Ver Zonas</Button>
         </Form.Group>
       </Form>
-
       {/* Modal para Municipios */}
       <Modal show={showMunicipios} onHide={() => setShowMunicipios(false)}>
         <Modal.Header closeButton>
@@ -143,7 +132,6 @@ function ZonasMunicipios() {
           </ListGroup>
         </Modal.Body>
       </Modal>
-
       {/* Modal para Zonas */}
       <Modal show={showZonas} onHide={() => setShowZonas(false)}>
         <Modal.Header closeButton>
@@ -163,5 +151,4 @@ function ZonasMunicipios() {
     </Container>
   );
 }
-
 export default ZonasMunicipios;

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import axios from 'axios';  
 import Sidebar from './Elementos/Sidebar';
 import Footer from './Elementos/Footer';
 import Header from './Elementos/Header';
+import Grafico from './Elementos/Grafico';
 import ClientesRecientes from './Tablas/ClientesRecientes';
 import { Container, Card, Row, Col} from 'react-bootstrap';
 import './Estilo.css';
@@ -99,7 +100,8 @@ function Principal() {
           </Card>
         </Col>
         </Row>
-        <ClientesRecientes /><br></br> <br></br>
+        <ClientesRecientes />
+        <Grafico /><br></br> <br></br>
         </Container>
         <Footer />
         </div> 

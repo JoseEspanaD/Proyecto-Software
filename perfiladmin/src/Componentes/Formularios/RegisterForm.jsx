@@ -48,22 +48,10 @@ const RegisterForm = () => {
             <Form.Label>Contraseña:</Form.Label>
             <Form.Control type="password" placeholder="Password" value={password}
             onChange={(e) => setPassword(e.target.value)} /> 
-            <Form.Label>Dirección:</Form.Label>
-            <Form.Control type="text" placeholder="Direccion" value={address}
-            onChange={(e) => setAddress(e.target.value)} /> 
             <Form.Label>Telefono:</Form.Label>
             <Form.Control type="text" placeholder="1234-5678" value={phone}
             onChange={(e) => setPhone(e.target.value)} /> 
-            <Form.Select
-                value={municipio}
-                onChange={(e) => setMunicipio(e.target.value)}
-                required
-            >
-            <option value="">Seleccione un municipio</option>
-                {municipios.map((mun) => (
-                    <option key={mun} value={mun}>{mun}</option>
-                ))}
-            </Form.Select> 
+             
           </Form.Group>
           <Button variant="outline-danger" type="submit" className="mt-3">
             Registro
