@@ -34,6 +34,7 @@ function Sidebar() {
         <Nav.Link onClick={() => handleClickthree()} className="text-white">Productos Disponibles</Nav.Link>
         <Nav.Link onClick={() => handleClicktwo('Admin')} className="text-white">Administradores</Nav.Link>
         <Nav.Link onClick={() => handleClick('cliente')} className="text-white">Agregar Cliente</Nav.Link>
+        <Nav.Link onClick={() => handleClick('zonas')} className="text-white">Modificar Cobertura</Nav.Link>
       </Nav>
     </div>
   );

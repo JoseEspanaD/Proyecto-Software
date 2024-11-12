@@ -8,6 +8,8 @@ const DescripcionProducto = ({ product }) => {
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
+  const MAX_QUANTITY = 99999; // Establece un límite máximo de cantidad
+
   // Función para manejar el clic en "Añadir al pedido"
   const handleAgregarAlPedido = () => {
     const cartItem = {
@@ -43,7 +45,7 @@ const DescripcionProducto = ({ product }) => {
   }
 
   const handleIncrement = () => {
-    setQuantity(prevQuantity => prevQuantity + 1);
+    setQuantity(prevQuantity => Math.min(MAX_QUANTITY, prevQuantity + 1)); // Limita el incremento
   }
 
   const handleDecrement = () => {
@@ -71,14 +73,16 @@ const DescripcionProducto = ({ product }) => {
             <FormControl
               type="number"
               value={quantity}
-              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))}
+              onChange={(e) => setQuantity(Math.max(1, Math.min(MAX_QUANTITY, parseInt(e.target.value))))} // Limita el valor ingresado
               min="1"
+              max={MAX_QUANTITY} // Establece el límite máximo
               className="text-center"
             />
             <Button variant="outline-secondary" onClick={handleIncrement}>
               <FaPlus />
             </Button>
           </InputGroup>
+          <small className="text-danger font-bold">Límite: {MAX_QUANTITY} unidades</small> {/* Mensaje de límite */}
         </div>
         <Button variant="primary" onClick={handleAgregarAlPedido} className="w-100">
           Añadir al pedido

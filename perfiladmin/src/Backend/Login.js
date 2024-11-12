@@ -454,8 +454,71 @@ app.put('/UpdateStatus/:id_order', async (req, res) => {
   }
 });
 
+// Rutas para municipios
+app.get('/api/municipios', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM municipio');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
 
+app.post('/api/municipios', async (req, res) => {
+  const { nombre_municipio } = req.body;
+  try {
+    const result = await pool.query('INSERT INTO municipio (nombre_municipio) VALUES ($1)', [nombre_municipio]);
+    res.status(201).send('Municipio agregado');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
 
+app.delete('/api/municipios/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM municipio WHERE id_municipio = $1', [id]);
+    res.send('Municipio eliminado');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+// Rutas para zonas
+app.get('/api/zonas', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM zona');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+app.post('/api/zonas', async (req, res) => {
+  const { nombre_zona } = req.body;
+  try {
+    const result = await pool.query('INSERT INTO zona (nombre_zona) VALUES ($1)', [nombre_zona]);
+    res.status(201).send('Zona agregada');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+app.delete('/api/zonas/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM zona WHERE id_zona = $1', [id]);
+    res.send('Zona eliminada');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
 
 // Iniciar el servidor
 app.listen(5001, () => {

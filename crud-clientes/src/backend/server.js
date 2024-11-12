@@ -152,15 +152,15 @@ app.get('/api/orders', verifyToken, async (req, res) => {
 // Añade esta nueva ruta después de las rutas existentes
 app.get('/api/user', verifyToken, async (req, res) => {
     try {
-        const result = await pool.query('SELECT name, e_mail, address, phone, municipio FROM customer WHERE id_customer = $1', [req.userId]);
+        const result = await pool.query('SELECT name, e_mail, address, phone, id_municipio, id_zona FROM customer WHERE id_customer = $1', [req.userId]);
         if (result.rows.length > 0) {
             res.json(result.rows[0]);
         } else {
             res.status(404).json({ error: 'Usuario no encontrado' });
         }
     } catch (error) {
-        console.error('Error al obtener datos del usuario:', error);
-        res.status(500).json({ error: 'Error al obtener datos del usuario' });
+        console.error('Error al obtener datos del usuario:', error.message); // Log más específico
+        res.status(500).json({ error: 'Error al obtener datos del usuario', details: error.message });
     }
 });
 
@@ -239,7 +239,7 @@ app.post('/login', async (req, res) => {
 
 // Ruta para registrar un cliente nuevo
 app.post('/register', async (req, res) => {
-    const { name, e_mail, password, address, phone, municipio } = req.body;
+    const { name, e_mail, password, address, phone, id_municipio, id_zona } = req.body;
 
     try {
         // Verificar si el email ya está registrado
@@ -253,11 +253,11 @@ app.post('/register', async (req, res) => {
 
         // Insertar el nuevo cliente
         const query = `
-            INSERT INTO customer (name, e_mail, status, password, address, phone, municipio)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            INSERT INTO customer (name, e_mail, status, password, address, phone, id_municipio, id_zona)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING id_customer
         `;
-        const values = [name, e_mail, 'active', hashedPassword, address, phone.toString(), municipio];
+        const values = [name, e_mail, 'active', hashedPassword, address, phone.toString(), id_municipio, id_zona];
         const result = await pool.query(query, values);
 
         const newUserId = result.rows[0].id_customer;
@@ -269,6 +269,18 @@ app.post('/register', async (req, res) => {
     } catch (err) {
         console.error('Error al registrar el cliente:', err);
         res.status(500).json({ error: 'Error al registrar el cliente', details: err.message });
+    }
+});
+
+// Nueva ruta para obtener municipios y zonas
+app.get('/api/municipios-y-zonas', async (req, res) => {
+    try {
+        const municipios = await pool.query('SELECT * FROM municipio'); // Obtener municipios
+        const zonas = await pool.query('SELECT * FROM zona'); // Obtener zonas
+        res.json({ municipios: municipios.rows, zonas: zonas.rows });
+    } catch (error) {
+        console.error('Error al obtener municipios y zonas:', error);
+        res.status(500).json({ error: 'Error al obtener municipios y zonas' });
     }
 });
 

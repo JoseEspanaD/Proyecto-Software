@@ -7,6 +7,7 @@ const CarritoCompras = ({ onProcederPedido }) => {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
   const userId = localStorage.getItem('id_customer');
+  const MAX_QUANTITY = 99999;
 
   useEffect(() => {
     const cart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
@@ -21,7 +22,7 @@ const CarritoCompras = ({ onProcederPedido }) => {
 
   const handleQuantityChange = (id, newQuantity) => {
     const updatedCart = cartItems.map(item => 
-      item.id === id ? { ...item, quantity: Math.max(1, newQuantity) } : item
+      item.id === id ? { ...item, quantity: Math.max(1, Math.min(MAX_QUANTITY, newQuantity)) } : item
     );
     setCartItems(updatedCart);
     localStorage.setItem(`cart_${userId}`, JSON.stringify(updatedCart));
@@ -61,7 +62,7 @@ const CarritoCompras = ({ onProcederPedido }) => {
               {cartItems.map((item) => (
                 <tr key={item.id}>
                   <td>
-                  <img src={`http://localhost:5001/uploads/${item.image}`} alt={item.name} style={{width: '50px', marginRight: '10px'}} />
+                    <img src={`http://localhost:5001/uploads/${item.image}`} alt={item.name} style={{width: '50px', marginRight: '10px'}} />
                     {item.name}
                   </td>
                   <td>
@@ -74,6 +75,7 @@ const CarritoCompras = ({ onProcederPedido }) => {
                         value={item.quantity}
                         onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
                         min="1"
+                        max={MAX_QUANTITY}
                         className="text-center"
                       />
                       <Button variant="outline-secondary" onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>

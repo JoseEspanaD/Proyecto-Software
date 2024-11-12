@@ -105,7 +105,7 @@ const HistorialPedidos = () => {
               <td>Q {pedido.total_price}</td>
               <td>
                 <Button variant="info" onClick={() => handleVerDescripcion(pedido)}>
-                  Descripción
+                  Detalle
                 </Button>
               </td>
             </tr>

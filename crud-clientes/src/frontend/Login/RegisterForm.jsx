@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Form, Button, Alert } from 'react-bootstrap';
 
@@ -9,17 +9,24 @@ const RegisterForm = () => {
     const [address, setAddress] = useState('');
     const [phone, setPhone] = useState('');
     const [municipio, setMunicipio] = useState('');
+    const [zona, setZona] = useState('');
     const [message, setMessage] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [registrationSuccess, setRegistrationSuccess] = useState(false);
+    const [municipios, setMunicipios] = useState([]);
+    const [zonas, setZonas] = useState([]);
     const navigate = useNavigate();
 
-    const municipios = [
-        'Guatemala', 'Santa Catarina Pinula', 'San José Pinula', 'San José del Golfo',
-        'Palencia', 'Chinautla', 'San Pedro Ayampuc', 'Mixco', 'San Pedro Sacatepéquez',
-        'San Juan Sacatepéquez', 'San Raymundo', 'Chuarrancho', 'Fraijanes', 'Amatitlán',
-        'Villa Nueva', 'Villa Canales', 'San Miguel Petapa'
-    ];
+    useEffect(() => {
+        const fetchMunicipiosYZonas = async () => {
+            const response = await fetch('http://localhost:5000/api/municipios-y-zonas');
+            const data = await response.json();
+            setMunicipios(data.municipios);
+            setZonas(data.zonas);
+        };
+
+        fetchMunicipiosYZonas();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,7 +34,15 @@ const RegisterForm = () => {
             setMessage('Las contraseñas no coinciden');
             return;
         }
-        const formData = { name, password, e_mail: email, address, phone, municipio };
+        const formData = { 
+            name, 
+            password, 
+            e_mail: email, 
+            address, 
+            phone, 
+            id_municipio: municipio,
+            id_zona: zona
+        };
     
         try {
             const response = await fetch('http://localhost:5000/register', {
@@ -139,9 +154,31 @@ const RegisterForm = () => {
                                     required
                                 >
                                     <option value="">Seleccione un municipio</option>
-                                    {municipios.map((mun) => (
-                                        <option key={mun} value={mun}>{mun}</option>
-                                    ))}
+                                    {municipios.length > 0 ? (
+                                        municipios.map((mun) => (
+                                            <option key={mun.id_municipio} value={mun.id_municipio}>{mun.nombre_municipio}</option>
+                                        ))
+                                    ) : (
+                                        <option value="" disabled>No hay municipios disponibles</option>
+                                    )}
+                                </Form.Select>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="formZona">
+                                <Form.Label style={{ color: 'white' }}>Zona:</Form.Label>
+                                <Form.Select
+                                    value={zona}
+                                    onChange={(e) => setZona(e.target.value)}
+                                    required
+                                >
+                                    <option value="">Seleccione una zona</option>
+                                    {zonas.length > 0 ? (
+                                        zonas.map((z) => (
+                                            <option key={z.id_zona} value={z.id_zona}>{z.nombre_zona}</option>
+                                        ))
+                                    ) : (
+                                        <option value="" disabled>No hay zonas disponibles</option>
+                                    )}
                                 </Form.Select>
                             </Form.Group>
 
