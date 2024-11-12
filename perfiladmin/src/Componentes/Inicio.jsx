@@ -7,6 +7,7 @@ const Inicio = () => {
   const [e_mail, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate(); // Hook para redirigir
 
   const handleLogin = async (e) => {
@@ -19,10 +20,12 @@ const Inicio = () => {
       localStorage.setItem('authToken', token);
 
       setError('');
-      alert('Login exitoso');
+      setSuccessMessage('Se ha iniciado sesión correctamente');
 
-      // Redirigir a la página Principal
-      navigate('/Principal');
+      // Redirigir a la página Principal después de 2 segundos
+      setTimeout(() => {
+        navigate('/Principal');
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.error || 'Error al iniciar sesión');
     }
@@ -60,6 +63,11 @@ const Inicio = () => {
           </Button>
         </Form>
         {error && <Alert variant="danger" className="mt-3">{error}</Alert>} 
+        {successMessage && (
+          <Alert variant="success" className="mt-3">
+            {successMessage}
+          </Alert>
+        )}
       </div>
     </Container>
   );
