@@ -39,16 +39,16 @@ function Enproceso() {
         <tr>
           <th>#</th>
           <th>Estatus</th>
-          <th>Comentarios</th>
+          <th>Comentario</th>
           <th>Fecha</th>
-          <th>Precio total</th>
-          <th>Numero de cliente</th>
+          <th>Precio Total</th>
+          <th>Nombre del cliente</th>
           <th>Estatus</th>
-          <th>Descripcion</th>
+          <th>Descripción</th>
           <th>Fecha de Proceso</th>
           <th>Fecha de Entrega</th>
           <th>Tiempo para pasar Proceso</th>
-          <th>Duracion de proceso a entrega</th>
+          <th>Duración de proceso a entrega</th>
         </tr>
       </thead>
       <tbody> 

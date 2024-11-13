@@ -36,13 +36,13 @@ function Enproceso() {
           <tr>
             <th>#</th>
             <th>Estatus</th>
-            <th>Comentarios</th>
+            <th>Comentario</th>
             <th>Fecha De pedido</th>
-            <th>Precio total</th>
-            <th>Nombre de cliente</th>
+            <th>Precio Total</th>
+            <th>Nombre del Cliente</th>
             <th>Modificar Estatus</th>
             <th>Descripción</th>
-            <th>Fecha Colocada En proceso</th>
+            <th>Fecha Colocada en Proceso</th>
             <th>Tiempo para pasar Proceso</th>
           </tr>
         </thead>

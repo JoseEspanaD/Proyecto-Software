@@ -69,7 +69,6 @@ const Productos = () => {
                         </div>
                     </div>
                 </Container>
-                <Footer />
             </div>
         </div>
     );

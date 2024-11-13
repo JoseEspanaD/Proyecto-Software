@@ -39,10 +39,10 @@ function Sinver() {
         <tr>
           <th>#</th>
           <th>Estatus</th>
-          <th>Comentarios</th>
-          <th>Fechas</th>
-          <th>Precio total</th>
-          <th>Numero de cliente</th>
+          <th>Comentario</th>
+          <th>Fecha</th>
+          <th>Precio Total</th>
+          <th>Nombre del Cliente</th>
           <th>Estatus</th>
           <th>Descripcion</th>
         </tr>

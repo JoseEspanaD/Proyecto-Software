@@ -50,7 +50,7 @@ function Sidebar() {
       <hr className="linea-divisoria" />
       <Nav className="flex-column">
         <Nav.Link href="/Principal" className={`text-white ${isActive('Inicio')}`} onClick={() => setActiveLink('Inicio')}>Inicio</Nav.Link>
-        <Nav.Link onClick={() => handleClick('categoria')} className={`text-white ${isActive('categoria')}`}>Agregar Categoría</Nav.Link>
+        <Nav.Link onClick={() => handleClick('categoria')} className={`text-white ${isActive('categoria')}`}>Administrar Categorías</Nav.Link>
         <Nav.Link onClick={() => handleClick('Productos')} className={`text-white ${isActive('Productos')}`}>Agregar Productos</Nav.Link>
         <Nav.Link onClick={() => { setActiveLink('VerificarPedidos'); navigate('/Opciones'); }} className={`text-white ${isActive('VerificarPedidos')}`}>Verificar Pedidos</Nav.Link>
         <Nav.Link onClick={() => { setActiveLink('Clientes'); navigate('/Tablas', { state: { tablas: 'Clientes' } }); }} className={`text-white ${isActive('Clientes')}`}>Clientes Registrados</Nav.Link>
@@ -58,7 +58,6 @@ function Sidebar() {
         <Nav.Link onClick={() => { setActiveLink('Administradores'); navigate('/Tablas', { state: { tablas: 'Admin' } }); }} className={`text-white ${isActive('Administradores')}`}>Administradores</Nav.Link>
         <Nav.Link onClick={() => handleClick('cliente')} className={`text-white ${isActive('cliente')}`}>Agregar Cliente</Nav.Link>
         <Nav.Link onClick={() => handleClick('zonas')} className={`text-white ${isActive('zonas')}`}>Modificar Cobertura</Nav.Link>
-        <Nav.Link onClick={() => handleClick('MonitoreoAdministradores')} className={`text-white ${isActive('MonitoreoAdministradores')}`}>Monitoreo de Administradores</Nav.Link>
       </Nav>
     </div>
   );

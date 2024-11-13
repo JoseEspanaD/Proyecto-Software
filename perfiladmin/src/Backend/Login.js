@@ -421,7 +421,7 @@ app.get('/api/products/:id', async (req, res) => {
 // Ruta para obtener productos, con opción de filtrar por categoría
 app.get('/api/products', async (req, res) => {
   const { category } = req.query; // Obtener la categoría de la query string
-  let query = "SELECT * FROM product WHERE status = '1'";
+  let query = "SELECT * FROM product";
   
   if (category) {
       // Agregar la condición de categoría si se proporciona
@@ -694,6 +694,31 @@ app.delete('/api/zonas/:id', async (req, res) => {
       res.status(200).send('Zona eliminada correctamente');
     } else {
       res.status(404).send('Zona no encontrada');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+});
+
+// Endpoint para actualizar una categoría
+app.put('/UpdateCategory.js/:category', upload.single('image'), async (req, res) => {
+  const { category } = req.params;
+  const { name, status } = req.body;
+  const image = req.file ? req.file.filename : null; // Nombre del archivo guardado
+
+  try {
+    const query = `
+      UPDATE category_table
+      SET name = $1, status = $2, image = $3
+      WHERE category = $4
+    `;
+    const result = await pool.query(query, [name, status, image, category]);
+
+    if (result.rowCount > 0) {
+      res.status(200).send('Categoría actualizada correctamente!');
+    } else {
+      res.status(404).send('Categoría no encontrada.');
     }
   } catch (err) {
     console.error(err);

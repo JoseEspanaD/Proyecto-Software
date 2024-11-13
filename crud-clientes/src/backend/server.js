@@ -127,16 +127,7 @@ app.post('/api/orders', verifyToken, async (req, res) => {
         res.status(500).json({ error: 'Error al procesar el pedido', details: error.message });
     }
 });
-//Buscar imagenes para el inicio 
-app.get('/api/categories', async (req, res) => {
-    try {
-      const categories = await pool.query('SELECT category, name, image FROM category_table');
-      res.json(categories.rows);
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).send('Error al obtener categorías');
-    }
-  });
+
   
 // Ruta para obtener pedidos del usuario correspondiente
 app.get('/api/orders', verifyToken, async (req, res) => {
