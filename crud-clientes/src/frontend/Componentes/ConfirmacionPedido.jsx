@@ -96,51 +96,43 @@ const ConfirmacionPedido = ({ show, onHide, cartItems, total, onConfirm }) => {
                 ) : (
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Nombre Completo</Form.Label>
+                            <Form.Label><strong>Nombre Completo</strong></Form.Label>
                             <Form.Control 
                                 type="text" 
                                 value={nombre} 
-                                onChange={(e) => setNombre(e.target.value)}
-                                required 
+                                readOnly
+                                plaintext
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Dirección</Form.Label>
+                            <Form.Label><strong>Dirección</strong></Form.Label>
                             <Form.Control 
                                 type="text" 
                                 value={direccion} 
-                                onChange={(e) => setDireccion(e.target.value)}
-                                required 
+                                readOnly
+                                plaintext
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Municipio</Form.Label>
-                            <Form.Select 
-                                value={municipio} 
-                                onChange={(e) => setMunicipio(e.target.value)}
-                                required 
-                            >
-                                <option value="">Seleccione un municipio</option>
-                                {municipios.map((mun) => (
-                                    <option key={mun.id_municipio} value={mun.id_municipio}>{mun.nombre_municipio}</option>
-                                ))}
-                            </Form.Select>
+                            <Form.Label><strong>Municipio</strong></Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                value={municipios.find(mun => mun.id_municipio === municipio)?.nombre_municipio || ''} 
+                                readOnly
+                                plaintext
+                            />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Zona</Form.Label>
-                            <Form.Select 
-                                value={zona} 
-                                onChange={(e) => setZona(e.target.value)}
-                                required 
-                            >
-                                <option value="">Seleccione una zona</option>
-                                {zonas.map((z) => (
-                                    <option key={z.id_zona} value={z.id_zona}>{z.nombre_zona}</option>
-                                ))}
-                            </Form.Select>
+                            <Form.Label><strong>Zona</strong></Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                value={zonas.find(z => z.id_zona === zona)?.nombre_zona || ''} 
+                                readOnly
+                                plaintext
+                            />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Comentarios adicionales</Form.Label>
+                            <Form.Label><strong>Comentarios Adicionales</strong></Form.Label>
                             <Form.Control 
                                 as="textarea" 
                                 rows={3}
@@ -149,7 +141,7 @@ const ConfirmacionPedido = ({ show, onHide, cartItems, total, onConfirm }) => {
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Fecha del pedido: {fechaPedido}</Form.Label>
+                            <Form.Label><strong>Fecha del pedido: {fechaPedido}</strong></Form.Label>
                         </Form.Group>
                         <h5>Resumen del pedido:</h5>
                         <ListGroup>

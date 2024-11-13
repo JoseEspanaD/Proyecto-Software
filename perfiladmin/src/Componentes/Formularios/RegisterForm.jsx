@@ -1,5 +1,5 @@
 import React, { useState } from 'react'; 
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Modal } from 'react-bootstrap';
 
 const RegisterForm = () => {
     const [name, setName] = useState('');
@@ -9,6 +9,7 @@ const RegisterForm = () => {
     const [message, setMessage] = useState('');
     const [phone, setPhone] = useState('');
     const [municipio, setMunicipio] = useState('');
+    const [showModal, setShowModal] = useState(false);
     const municipios = [
       'Guatemala', 'Santa Catarina Pinula', 'San José Pinula', 'San José del Golfo',
       'Palencia', 'Chinautla', 'San Pedro Ayampuc', 'Mixco', 'San Pedro Sacatepéquez',
@@ -27,28 +28,27 @@ const RegisterForm = () => {
                 body: JSON.stringify(formData),
             });
     
-            const result = await response.text(); 
-            alert('Nuevo Administrador Registrado!');
+            setShowModal(true);
         } catch (error) {
             setMessage('Error en el registro');
         }
     }; 
 
     return ( 
-             
+        <>
             <Form onSubmit={handleSubmitt}>
-          <h1 className="mb-4" style={{color: 'white'}}>Login</h1>
+          <h2 className="titulo-historial">Crear Nueva Cuenta de Administrador</h2>
           <Form.Group controlId="formBasicText">
             <Form.Label className="mb-4" style={{color: 'white'}}>Nombre:</Form.Label>
             <Form.Control type="text" placeholder="Name" value={name}
             onChange={(e) => setName(e.target.value)}/>
-            <Form.Label>Correo Electronico:</Form.Label>
+            <Form.Label className="mb-4" style={{color: 'white'}}>Correo Electronico:</Form.Label>
             <Form.Control type="email" placeholder="prueba@gmail.com" value={email}
             onChange={(e) => setEmail(e.target.value)}/>
-            <Form.Label>Contraseña:</Form.Label>
+            <Form.Label className="mb-4" style={{color: 'white'}}>Contraseña:</Form.Label>
             <Form.Control type="password" placeholder="Password" value={password}
             onChange={(e) => setPassword(e.target.value)} /> 
-            <Form.Label>Telefono:</Form.Label>
+            <Form.Label className="mb-4" style={{color: 'white'}}>Telefono:</Form.Label>
             <Form.Control type="text" placeholder="1234-5678" value={phone}
             onChange={(e) => setPhone(e.target.value)} /> 
              
@@ -57,7 +57,19 @@ const RegisterForm = () => {
             Registro
           </Button> 
         </Form>  
-        
+
+        <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal.Header closeButton>
+                <Modal.Title>Registro Exitoso</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>¡Nuevo Administrador Registrado!</Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={() => setShowModal(false)}>
+                    Cerrar
+                </Button>
+            </Modal.Footer>
+        </Modal>
+        </>
     );
 };
 

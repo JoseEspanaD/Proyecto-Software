@@ -26,6 +26,12 @@ function Inicio() {
     navigate('/productos');
   };
 
+  // Agrupar categorías en conjuntos de tres
+  const groupedCategories = [];
+  for (let i = 0; i < categories.length; i += 3) {
+    groupedCategories.push(categories.slice(i, i + 3));
+  }
+
   return (
     <>
       <Navbar />
@@ -45,22 +51,20 @@ function Inicio() {
 
       {/* CAROUSEL dinámico con imágenes de la base de datos */}
       <Carousel className="custom-carousel" controls={true} indicators={true}>
-        {categories
-          .filter(category => category.image) // Filtra las categorías que tienen una imagen
-          .map((category, index) => (
-            <Carousel.Item key={index}>
-              <div className="carousel-container">
+        {groupedCategories.map((group, index) => (
+          <Carousel.Item key={index}>
+            <div className="carousel-container">
+              {group.map((category, idx) => (
                 <img
+                  key={idx}
                   className="d-block carousel-image"
                   src={`http://localhost:5001/uploads/${category.image}`} // Construye la URL completa de la imagen
                   alt={`Imagen de la categoría ${category.name}`}
                 />
-                <Carousel.Caption>
-                  <h3>{category.name}</h3>
-                </Carousel.Caption>
-              </div>
-            </Carousel.Item>
-          ))}
+              ))}
+            </div>
+          </Carousel.Item>
+        ))}
       </Carousel>
 
       {/* INFORMACIÓN DE EMPRESA */}

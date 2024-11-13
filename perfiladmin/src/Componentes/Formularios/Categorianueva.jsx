@@ -100,18 +100,18 @@ function AdministrarCategorias() {
       <Form onSubmit={editingCategory ? handleUpdate : handleSubmitt}>
         <h2 className="titulo-historial">Administrar Categorías</h2>
         <Form.Group controlId="formBasicText">
-          <Form.Label style={{ color: 'white' }}>Nombre:</Form.Label>
+          <Form.Label style={{ color: 'white' }}>Nombre de la Categoría:</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Nombre"
+            placeholder="Categoría"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
 
-          <Form.Label style={{ color: 'white' }}>Categoría:</Form.Label>
+          <Form.Label style={{ color: 'white' }}>Abreviatura de la Categoría:</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Categoría"
+            placeholder="Cat"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           />
