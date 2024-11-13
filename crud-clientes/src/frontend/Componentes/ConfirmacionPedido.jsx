@@ -12,6 +12,8 @@ const ConfirmacionPedido = ({ show, onHide, cartItems, total, onConfirm }) => {
     const [municipios, setMunicipios] = useState([]);
     const [zonas, setZonas] = useState([]);
     const fechaPedido = new Date().toLocaleDateString();
+    const fechaPedidoiso = new Date().toISOString();
+
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -63,7 +65,7 @@ const ConfirmacionPedido = ({ show, onHide, cartItems, total, onConfirm }) => {
                 municipio, // Enviando el ID del municipio
                 zona, // Enviando el ID de la zona
                 comentarios,
-                fechaPedido,
+                fechaPedidoiso,
                 cartItems: orderItems,
                 total
             },

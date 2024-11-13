@@ -5,6 +5,7 @@ body {
   height: 100vh; /* Asegura que el fondo cubra toda la altura de la ventana */
   margin: 0; /* Elimina el margen por defecto del body */
   color: white;
+  background-attachment: fixed; 
 }
 
 h1 {

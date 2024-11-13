@@ -17,30 +17,14 @@ function Sinver() {
   }, []);
   
   const handleStatusChange = async (id_order, newStatus) => {
-    const currentOrder = sinver.find(order => order.id_order === id_order);
-    const validTransitions = {
-        'sin ver': 'en proceso',
-        'en proceso': 'entregado'
-    };
-
-    if (validTransitions[currentOrder.status] !== newStatus) {
-        console.error('Transición de estado no válida');
-        return; // No permitir el cambio
-    }
-
-    const startTime = new Date(); // Guardar el tiempo de inicio
+    console.log(`Cambiando el estatus del pedido ${id_order} a ${newStatus}`); // Agrega este log
     try {
-        await axios.put(`http://localhost:5001/UpdateStatus/${id_order}`, { status: newStatus });
-        setEnproceso(sinver.map(order => 
-            order.id_order === id_order ? { ...order, status: newStatus } : order
-        ));
-
-        // Guardar el tiempo que tardó en cambiar el estado
-        const endTime = new Date();
-        const timeTaken = endTime - startTime; // Tiempo en milisegundos
-        await axios.post('http://localhost:5001/LogStatusChange', { id_order, timeTaken });
+      await axios.put(`http://localhost:5001/UpdateStatus/${id_order}`, { status: newStatus });
+      setEnproceso(sinver.map(order => 
+        order.id_order === id_order ? { ...order, status: newStatus } : order
+      ));
     } catch (error) {
-        console.error('Error updating status:', error);
+      console.error('Error updating status:', error);
     }
   };
   
@@ -49,7 +33,7 @@ function Sinver() {
         
          
         <Container> 
-            <h3 className="titulo-historial-opciones">Carrito de Compras</h3>
+            <h1 className="mb-4" style={{color: 'white'}} >Sin Ver</h1>
       <Table striped bordered hover className="table table-dark">
       <thead>
         <tr>
@@ -69,7 +53,7 @@ function Sinver() {
               <td>{num++}</td>
               <td>{sinvers.status}</td>
               <td>{sinvers.comment}</td>
-              <td>{new Date(sinvers.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
+              <td>{new Date(sinvers.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit' })}</td>
               <td>{sinvers.total_price}</td>
               <td>{sinvers.name}</td>
               <td>
@@ -78,9 +62,7 @@ function Sinver() {
                     Cambiar Estatus
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'en proceso')}>En proceso</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'entregado')}>Entregados</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'sin ver')}>Sin ver</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleStatusChange(sinvers.id_order, 'En proceso')}>En proceso</Dropdown.Item> 
                   </Dropdown.Menu>
                 </Dropdown>
               </td>

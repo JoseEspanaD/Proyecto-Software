@@ -31,16 +31,20 @@ const Opciones = () => {
                     {/* Mostrar la tabla según la categoría activa */}
                     {activeCategory === 'Todos' && (
                         <>
+                            <Sinver />
                             <Enproceso />
                             <Entregados />
-                            <Sinver />
+                            
                         </>
                     )}
+                    {activeCategory === 'Sin Ver' && <Sinver />}
                     {activeCategory === 'En Proceso' && <Enproceso />}
                     {activeCategory === 'Entregados' && <Entregados />}
-                    {activeCategory === 'Sin Ver' && <Sinver />}
+                    
+                    
                 </Container>
             </div>
+            <br></br><br></br>
             <Footer />
         </div>
     );

@@ -94,7 +94,7 @@ app.post('/api/orders', verifyToken, async (req, res) => {
     console.log('Recibiendo pedido:', req.body);
     console.log('Usuario ID:', req.userId); // Agregar este log
     
-    const { nombre, direccion, municipio, comentarios, fechaPedido, cartItems, total } = req.body;
+    const { nombre, direccion, municipio, comentarios, fechaPedidoiso, cartItems, total } = req.body;
   
     try {
         console.log('Iniciando transacción');
@@ -103,7 +103,7 @@ app.post('/api/orders', verifyToken, async (req, res) => {
         console.log('Insertando en la tabla order');
         const orderResult = await pool.query(
             'INSERT INTO "order" (status, comment, date, total_price, id_customer) VALUES ($1, $2, $3, $4, $5) RETURNING id_order',
-            ['sin ver', comentarios, fechaPedido, total, req.userId]
+            ['sin ver', comentarios, fechaPedidoiso, total, req.userId]
         );
   
         const orderId = orderResult.rows[0].id_order;

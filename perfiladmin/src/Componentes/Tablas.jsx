@@ -28,6 +28,7 @@ function Tablas() {
         {tablaActual === 'Admin' && <Admintabla/>}
         {tablaActual === 'Categorias' && <Categorias/>}
         </Container>
+        <br></br><br></br>
         <Footer />
         </div> 
       </div>

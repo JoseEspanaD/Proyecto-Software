@@ -18,47 +18,32 @@ function Enproceso() {
   }, []);
 
   const handleStatusChange = async (id_order, newStatus) => {
-    const currentOrder = enproceso.find(order => order.id_order === id_order);
-    const validTransitions = {
-        'sin ver': 'en proceso',
-        'en proceso': 'entregado'
-    };
-
-    if (validTransitions[currentOrder.status] !== newStatus) {
-        console.error('Transición de estado no válida');
-        return; // No permitir el cambio
-    }
-
-    const startTime = new Date(); // Guardar el tiempo de inicio
     try {
-        await axios.put(`http://localhost:5001/UpdateStatus/${id_order}`, { status: newStatus });
-        setEnproceso(enproceso.map(order => 
-            order.id_order === id_order ? { ...order, status: newStatus } : order
-        ));
-        
-        // Guardar el tiempo que tardó en cambiar el estado
-        const endTime = new Date();
-        const timeTaken = endTime - startTime; // Tiempo en milisegundos
-        await axios.post('http://localhost:5001/LogStatusChange', { id_order, timeTaken });
+      await axios.put(`http://localhost:5001/UpdateStatus/${id_order}`, { status: newStatus });
+      setEnproceso(enproceso.map(order => 
+        order.id_order === id_order ? { ...order, status: newStatus } : order
+      ));
     } catch (error) {
-        console.error('Error updating status:', error);
+      console.error('Error updating status:', error);
     }
   };
   let num = 1;
   return (
     <Container>
-      <h3 className="titulo-historial-opciones">En Proceso</h3>
+      <h1 className="mb-4" style={{color: 'white'}}>En proceso</h1>
       <Table striped bordered hover className="table table-dark">
         <thead>
           <tr>
             <th>#</th>
             <th>Estatus</th>
             <th>Comentarios</th>
-            <th>Fechas</th>
+            <th>Fecha De pedido</th>
             <th>Precio total</th>
             <th>Nombre de cliente</th>
             <th>Modificar Estatus</th>
             <th>Descripción</th>
+            <th>Fecha Colocada En proceso</th>
+            <th>Tiempo para pasar Proceso</th>
           </tr>
         </thead>
         <tbody>
@@ -67,7 +52,7 @@ function Enproceso() {
               <td>{num++}</td>
               <td>{enprocesos.status}</td>
               <td>{enprocesos.comment}</td>
-              <td>{new Date(enprocesos.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
+              <td>{new Date(enprocesos.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit' })}</td>
               <td>{enprocesos.total_price}</td>
               <td>{enprocesos.name}</td>
               <td>
@@ -75,15 +60,15 @@ function Enproceso() {
                   <Dropdown.Toggle variant="secondary" id="dropdown-basic">
                     Cambiar Estatus
                   </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => handleStatusChange(enprocesos.id_order, 'en proceso')}>En proceso</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(enprocesos.id_order, 'entregado')}>Entregados</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(enprocesos.id_order, 'sin ver')}>Sin ver</Dropdown.Item>
+                  <Dropdown.Menu> 
+                    <Dropdown.Item onClick={() => handleStatusChange(enprocesos.id_order, 'Entregados')}>Entregados</Dropdown.Item> 
                   </Dropdown.Menu>
                 </Dropdown>
               </td>
               <td><Descripcion nombreCliente={enprocesos.name} 
     fechaPedido={enprocesos.date} id_order = {enprocesos.id_order} /></td>
+              <td>{new Date(enprocesos.fecha_p).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit' })}</td>
+              <td>{enprocesos.duracionp}</td>
             </tr>
           ))}
         </tbody>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Container, Dropdown, ButtonGroup } from 'react-bootstrap';
+import { Table, Container, Button} from 'react-bootstrap';
 import Descripcion from './Descripcion'; 
 
 function Enproceso() {
@@ -33,18 +33,22 @@ function Enproceso() {
         
          
         <Container> 
-            <h3 className="titulo-historial-opciones">Entregados</h3>
+            <h1 className="mb-4" style={{color: 'white'}}>Entregados</h1>
       <Table striped bordered hover className="table table-dark">
       <thead>
         <tr>
           <th>#</th>
           <th>Estatus</th>
           <th>Comentarios</th>
-          <th>Fechas</th>
+          <th>Fecha</th>
           <th>Precio total</th>
           <th>Numero de cliente</th>
           <th>Estatus</th>
           <th>Descripcion</th>
+          <th>Fecha de Proceso</th>
+          <th>Fecha de Entrega</th>
+          <th>Tiempo para pasar Proceso</th>
+          <th>Duracion de proceso a entrega</th>
         </tr>
       </thead>
       <tbody> 
@@ -53,23 +57,18 @@ function Enproceso() {
               <td>{num++}</td>
               <td>{entregados.status}</td>
               <td>{entregados.comment}</td>
-              <td>{new Date(entregados.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
+              <td>{new Date(entregados.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit' })}</td>
               <td>{entregados.total_price}</td>
               <td>{entregados.name}</td>
               <td>
-                <Dropdown as={ButtonGroup}>
-                  <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                    Cambiar Estatus
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'en proceso')}>En proceso</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'entregado')}>Entregados</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStatusChange(entregados.id_order, 'sin ver')}>Sin ver</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+              <Button variant="secondary">Entregados</Button>
               </td>
               <td><Descripcion nombreCliente={entregados.name} 
     fechaPedido={entregados.date} id_order = {entregados.id_order} /></td>
+              <td>{new Date(entregados.fecha_p).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit' })}</td>
+              <td>{new Date(entregados.fecha_e).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit' })}</td>           
+              <td>{entregados.duracionp}</td>
+              <td>{entregados.duracion}</td>
             </tr>
           ))} 
          
@@ -79,4 +78,4 @@ function Enproceso() {
     );
   }
   
-  export default Enproceso;
+  export default Enproceso; 

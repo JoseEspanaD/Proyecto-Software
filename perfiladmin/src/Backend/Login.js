@@ -132,9 +132,15 @@ app.get('/Administradores.js', async ( req,res) => {
 
 //Pedidos
 app.get('/Enproceso.js', async (req, res) => {
-  try {
-    const query = `SELECT O.id_order,O.status,O.comment,O.date,O.total_price,C.name 
-    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='en proceso'`;
+  try {  
+    const query = `SELECT O.id_order,O.status,O.comment,O.date,O.total_price,C.name,O.fecha_p,
+    CONCAT(
+      EXTRACT(day FROM O.fecha_p- O.date), ' días ',
+      EXTRACT(hour FROM O.fecha_p- O.date), ' horas ',
+      EXTRACT(minute FROM O.fecha_p- O.date), ' minutos ',
+      EXTRACT(second FROM O.fecha_p- O.date), ' segundos'
+    ) AS duracionp
+    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='En proceso'`; 
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -144,9 +150,21 @@ app.get('/Enproceso.js', async (req, res) => {
 });
 //Entregados
 app.get('/Entregados.js', async (req, res) => {
-  try {
-    const query = `SELECT O.id_order,O.status,O.comment,O.date,O.total_price,C.name 
-    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='entregado'`;
+  try {  
+    const query = `SELECT O.id_order,O.status,O.comment,O.date,O.total_price,C.name,O.fecha_p,O.fecha_e,
+    CONCAT(
+      EXTRACT(day FROM O.fecha_p- O.date), ' días ',
+      EXTRACT(hour FROM O.fecha_p- O.date), ' horas ',
+      EXTRACT(minute FROM O.fecha_p- O.date), ' minutos ',
+      EXTRACT(second FROM O.fecha_p- O.date), ' segundos'
+    ) AS duracionp, 
+    CONCAT(
+      EXTRACT(day FROM O.fecha_e - O.fecha_p), ' días ',
+      EXTRACT(hour FROM O.fecha_e - O.fecha_p), ' horas ',
+      EXTRACT(minute FROM O.fecha_e - O.fecha_p), ' minutos ',
+      EXTRACT(second FROM O.fecha_e - O.fecha_p), ' segundos'
+    ) AS duracion
+    FROM "order" O,customer C WHERE  O.id_customer = C.id_customer and O.status ='Entregados'`; 
     const result = await pool.query(query);
     res.json(result.rows);
   } catch (err) {
@@ -356,7 +374,7 @@ app.post('/login', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT * FROM administrator WHERE e_mail = $1', [e_mail]
+      'SELECT * FROM administrator WHERE e_mail = $1 and status=$2', [e_mail,'on-line']
     );
     const user = result.rows[0];
 
@@ -462,7 +480,20 @@ app.put('/UpdateStatus/:id_order', async (req, res) => {
   const { id_order } = req.params;
   const { status } = req.body;
   try {
-    const query = `UPDATE "order" SET status = $1 WHERE id_order = $2`;
+    const query = `
+      UPDATE "order" 
+      SET status = $1::VARCHAR,
+          fecha_p = CASE 
+                      WHEN $1::VARCHAR = 'En proceso' THEN NOW() AT TIME ZONE 'UTC' 
+                      ELSE fecha_p 
+                    END,
+          fecha_e = CASE 
+                      WHEN $1::VARCHAR = 'Entregados' THEN NOW() AT TIME ZONE 'UTC' 
+                      ELSE fecha_e 
+                    END
+      WHERE id_order = $2
+    `;
+
     const result = await pool.query(query, [status, id_order]);
     if (result.rowCount > 0) {
       res.status(200).send('Estatus actualizado correctamente');
@@ -474,6 +505,8 @@ app.put('/UpdateStatus/:id_order', async (req, res) => {
     res.status(500).send('Error en el servidor');
   }
 });
+
+
 
 
 app.put('/UpdateStatusclientes/:id_customer', async (req, res) => {
@@ -493,6 +526,22 @@ app.put('/UpdateStatusclientes/:id_customer', async (req, res) => {
   }
 });
 
+app.put('/UpdateStatusadmin/:id_admin', async (req, res) => {
+  const { id_admin} = req.params;
+  const { status } = req.body;
+  try {
+    const query = `UPDATE administrator SET status = $1 WHERE id_admin = $2`;
+    const result = await pool.query(query, [status, id_admin]);
+    if (result.rowCount > 0) {
+      res.status(200).send('Estatus actualizado correctamente');
+    } else {
+      res.status(404).send('Pedido no encontrado');
+    }
+  } catch (err) {
+    console.error('Error en el servidor:', err);
+    res.status(500).send('Error en el servidor');
+  }
+});
 
 // Nueva ruta para obtener municipios y zonas
 app.get('/api/municipios-y-zonas', async (req, res) => {
